@@ -345,15 +345,16 @@
         invalidateOnRefresh: true,
         snap: { snapTo: 1 / (panels.length - 1), duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: "power2.inOut" },
         onUpdate: (self) => {
-          const idx = 1 + Math.round(self.progress * (panels.length - 1));
-          $("#wineIdx").textContent = "0" + idx;
+          const idx = Math.round(self.progress * (panels.length - 1));
+          const label = $(".wp-ghost", panels[idx]);
+          if (label) $("#wineName").textContent = label.textContent;
           gsap.set("#wineFill", { scaleX: 0.25 + 0.75 * self.progress });
         }
       }
     });
 
     panels.forEach((panel) => {
-      const num = $(".wp-num", panel);
+      const num = $(".wp-ghost", panel);
       const bottleImg = $(".wp-bottle img", panel);
       gsap.fromTo(num, { xPercent: -16 }, {
         xPercent: 16, ease: "none",

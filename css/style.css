@@ -628,20 +628,26 @@ section { position: relative; }
 .wine-panel[data-wine="pinot"] { --wcol: var(--rubino); }
 .wine-panel[data-wine="schiava"] { --wcol: var(--rosato); }
 
-.wp-num {
+.wp-ghost {
   position: absolute;
-  top: 50%; left: 4%;
+  top: 50%; left: 3%;
   transform: translateY(-52%);
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 300;
-  font-size: clamp(14rem, 38vw, 34rem);
-  line-height: 1;
+  font-size: var(--ghost-size, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.015em;
   color: var(--wcol);
-  opacity: 0.13;
+  opacity: 0.14;
   pointer-events: none;
   white-space: nowrap;
 }
+/* la dimensione segue la lunghezza del nome: peso ottico costante */
+.wine-panel[data-wine="trentodoc"] { --ghost-size: clamp(4.5rem, 17vw, 14.5rem); }
+.wine-panel[data-wine="muller"]    { --ghost-size: clamp(3rem, 11.5vw, 9.5rem); }
+.wine-panel[data-wine="pinot"]     { --ghost-size: clamp(4rem, 15vw, 12.5rem); }
+.wine-panel[data-wine="schiava"]   { --ghost-size: clamp(5.5rem, 21vw, 18rem); }
 
 .wp-bottle {
   position: relative;
@@ -713,6 +719,11 @@ section { position: relative; }
   transform: translateX(-50%);
   display: flex; align-items: center; gap: 1rem;
   color: var(--paper-dim);
+}
+.wpr-name {
+  color: var(--paper);
+  min-width: 12ch;
+  text-align: right;
 }
 .wpr-bar {
   position: relative;
@@ -935,10 +946,11 @@ section { position: relative; }
     border-bottom: 1px solid var(--line);
   }
   .wp-bottle { height: min(52svh, 420px); }
-  .wp-num {
-    font-size: clamp(9rem, 42vw, 14rem);
-    top: 8%; left: auto; right: 2%;
+  .wine-panel { --ghost-size: clamp(2.6rem, 15vw, 4.6rem) !important; }
+  .wp-ghost {
+    top: 1.6rem; left: var(--gutter);
     transform: none;
+    opacity: 0.2;
   }
   .wines-track { display: block; width: auto; }
   .wines-progress { display: none; }
