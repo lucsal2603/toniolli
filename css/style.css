@@ -102,13 +102,11 @@ body.is-loaded .preloader { display: none; }
 
 .pre-inner { text-align: center; }
 .pre-quota { color: var(--oro); margin-bottom: 1.2rem; }
-.pre-name {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 11vw, 8rem);
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  overflow: hidden;
+.pre-logo {
+  width: min(74vw, 440px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 .pre-tag { color: var(--paper-faint); margin-top: 1.2rem; }
 
@@ -132,12 +130,12 @@ body.is-loaded .preloader { display: none; }
 }
 
 .nav-brand { display: flex; align-items: center; min-height: 44px; text-decoration: none; }
-.nav-word {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+.nav-logo {
+  height: 56px;
+  width: auto;
+  display: block;
 }
+@media (max-width: 767px) { .nav-logo { height: 46px; } }
 
 .nav-tag {
   color: var(--ink);
@@ -505,7 +503,13 @@ section { position: relative; }
   gap: clamp(1.2rem, 3vw, 2.6rem);
   padding: 0 var(--gutter);
   width: max-content;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
 }
+.stag-track.sta-trascinando { cursor: grabbing; }
+.stag-track img { -webkit-user-drag: none; }
 .stag-item { flex: 0 0 auto; width: clamp(240px, 30vw, 460px); }
 .si-frame {
   overflow: hidden;
@@ -1485,36 +1489,36 @@ html.static-mode .scroll-hint svg { animation: none; }
 a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
 
 /* ============================================================
-   APERTURA DELLA VALLE — lo schermo resta fermo, l'immagine
-   entra da destra e si blocca, poi arrivano le scritte
+   SCENA DEL MANIFESTO — citazione, poi l'immagine da destra,
+   poi il testo di sinistra si scambia: tutto a schermo fermo
    ============================================================ */
-.valle-open {
-  position: relative;
-  min-height: 100svh;
+.mani-img {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+  margin-top: 2.6rem;
+}
+.mani-img img { width: 100%; height: 100%; object-fit: cover; }
+.mani-next { margin-top: 2.6rem; }
+.mani-next .sec-title { font-size: clamp(2.6rem, 5.6vw, 5.4rem); }
+
+.mani-pin.is-seq {
+  max-width: none;
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: clamp(2rem, 6vw, 6rem);
   align-items: center;
   padding: calc(var(--nav-h) + 2vh) var(--gutter) 6vh;
-  overflow: clip;
 }
-.vo-head { align-self: center; }
-.vo-img {
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 2px;
+.mani-pin.is-seq .mani-left { position: relative; }
+.mani-pin.is-seq .mani-quote-wrap { position: relative; }
+.mani-pin.is-seq .mani-next {
+  position: absolute; inset: 0;
+  margin: 0;
+  display: flex; flex-direction: column; justify-content: center;
 }
-.vo-img img { width: 100%; height: 100%; object-fit: cover; }
-
-@media (max-width: 1023px) {
-  .valle-open {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding: 4rem var(--gutter) 0;
-    gap: 2rem;
-  }
-  .vo-img { order: -1; }
-}
+.mani-pin.is-seq .mani-quote p { font-size: clamp(1.7rem, 3.4vw, 3.1rem); }
+.mani-pin.is-seq .mani-img { margin: 0; }
 
 /* ============================================================
    SCIE DEL MANIFESTO — creste che attraversano lo schermo,

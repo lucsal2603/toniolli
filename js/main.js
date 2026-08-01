@@ -123,10 +123,10 @@
     document.documentElement.style.overflow = "hidden";
     window.scrollTo(0, 0);
     const preVal = { v: 238 };
-    const preChars = splitChars($("#preName"));
-    gsap.set(preChars, { yPercent: 115 });
+    const preLogo = $("#preLogo");
+    gsap.set(preLogo, { autoAlpha: 0, y: 30, scale: 0.965 });
     const ptl = gsap.timeline({ onComplete: releasePage });
-    ptl.to(preChars, { yPercent: 0, duration: 0.9, stagger: 0.045, ease: "expo.out" }, 0.1)
+    ptl.to(preLogo, { autoAlpha: 1, y: 0, scale: 1, duration: 1.0, ease: "expo.out" }, 0.1)
       .to(preVal, {
         v: 575, duration: 1.1, ease: "power2.out",
         onUpdate: () => { $("#preVal").textContent = Math.round(preVal.v); }
@@ -237,20 +237,49 @@
      MANIFESTO — parole che si accendono
      ============================================================ */
   const maniWords = splitWords($("#maniText"));
-  if (!reduceMotion) {
-    gsap.set(maniWords, { opacity: 0.13 });
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    gsap.to(maniWords, {
-      opacity: 1, stagger: 0.08, ease: "none",
-      scrollTrigger: {
-        trigger: ".mani-pin",
-        start: isDesktop ? "top top" : "top 70%",
-        end: isDesktop ? "+=130%" : "bottom 60%",
-        scrub: 0.4,
-        pin: isDesktop,
-        anticipatePin: 1,
-        refreshPriority: 3
-      }
+  {
+    const mmMani = gsap.matchMedia();
+    const pinEl = $("#maniPin");
+    const img = $("#maniImg");
+    const quoteWrap = $("#maniQuoteWrap");
+    const next = $("#maniNext");
+
+    // schermo fermo: parole, poi l'immagine entra da destra e si blocca,
+    // poi la citazione lascia il posto al titolo della valle
+    mmMani.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      pinEl.classList.add("is-seq");
+      gsap.set(maniWords, { opacity: 0.13 });
+      gsap.set(img, { xPercent: 120, autoAlpha: 0 });
+      gsap.set(next, { autoAlpha: 0, y: 36 });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinEl, start: "top top", end: "+=300%",
+          pin: true, scrub: 0.5, anticipatePin: 1,
+          invalidateOnRefresh: true, refreshPriority: 3
+        }
+      });
+      tl.to(maniWords, { opacity: 1, stagger: 0.05, ease: "none", duration: 1.1 })
+        .to({}, { duration: 0.15 })
+        .to(img, { xPercent: 0, autoAlpha: 1, duration: 0.55, ease: "power3.out" })
+        .to({}, { duration: 0.12 })
+        .to(quoteWrap, { autoAlpha: 0, y: -44, duration: 0.3, ease: "power2.in" })
+        .to(next, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, "-=0.08")
+        .to({}, { duration: 0.18 });
+      return () => {
+        pinEl.classList.remove("is-seq");
+        gsap.set([img, quoteWrap, next], { clearProps: "all" });
+        gsap.set(maniWords, { clearProps: "opacity" });
+      };
+    });
+
+    // sotto i 1024px niente scena: solo le parole che si accendono
+    mmMani.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+      gsap.set(maniWords, { opacity: 0.13 });
+      gsap.to(maniWords, {
+        opacity: 1, stagger: 0.08, ease: "none",
+        scrollTrigger: { trigger: ".mani-quote", start: "top 75%", end: "bottom 55%", scrub: 0.4 }
+      });
+      return () => gsap.set(maniWords, { clearProps: "opacity" });
     });
   }
 
@@ -322,20 +351,60 @@
           clone.setAttribute("aria-hidden", "true");
           track.appendChild(clone);
         });
+        $$("img", track).forEach((im) => { im.draggable = false; });
 
-        const giro = gsap.to(track, {
-          xPercent: -50,
-          duration: 46,
-          repeat: -1,
-          ease: "none"
+        // posizione governata a mano: avanzamento automatico + trascinamento
+        let meta = 0;
+        const misura = () => { meta = track.scrollWidth / 2; };
+        misura();
+        ScrollTrigger.addEventListener("refreshInit", misura);
+
+        let pos = 0, velInerzia = 0, fattore = 1, obiettivo = 1;
+        let visibile = false, trascina = false, ultimaX = 0, ultimoT = 0;
+        whenVisible(track, () => { visibile = true; }, () => { visibile = false; });
+
+        const avvolgi = (x) => { const m = meta || 1; return ((x % m) - m) % m; };
+
+        gsap.ticker.add((t, dtMs) => {
+          if (!visibile || !meta) return;
+          const dt = Math.min(dtMs / 1000, 0.05);
+          fattore += (obiettivo - fattore) * Math.min(1, 6 * dt);
+          if (!trascina) {
+            pos += (-meta / 46) * fattore * dt + velInerzia * dt;
+            velInerzia *= Math.exp(-3.2 * dt);
+          }
+          pos = avvolgi(pos);
+          gsap.set(track, { x: pos });
         });
 
-        // dorme fuori schermo; rallenta (senza fermarsi) su una scheda,
-        // così si riesce a leggere ma non sembra mai bloccato
-        whenVisible(track, () => giro.play(), () => giro.pause());
+        track.addEventListener("pointerdown", (e) => {
+          trascina = true;
+          ultimaX = e.clientX; ultimoT = e.timeStamp;
+          velInerzia = 0;
+          track.classList.add("sta-trascinando");
+          try { track.setPointerCapture(e.pointerId); } catch (err) { /* pointer sintetici */ }
+        });
+        track.addEventListener("pointermove", (e) => {
+          if (!trascina) return;
+          const dx = e.clientX - ultimaX;
+          const dt = Math.max(1, e.timeStamp - ultimoT);
+          pos = avvolgi(pos + dx);
+          velInerzia = gsap.utils.clamp(-1600, 1600, (dx / dt) * 1000);
+          ultimaX = e.clientX; ultimoT = e.timeStamp;
+          gsap.set(track, { x: pos });
+        });
+        const rilascia = () => {
+          if (!trascina) return;
+          trascina = false;
+          track.classList.remove("sta-trascinando");
+        };
+        track.addEventListener("pointerup", rilascia);
+        track.addEventListener("pointercancel", rilascia);
+
+        // sopra una scheda rallenta, per leggere senza che sembri fermo
         $$(".stag-item", track).forEach((card) => {
-          card.addEventListener("pointerenter", () => gsap.to(giro, { timeScale: 0.22, duration: 0.5 }));
-          card.addEventListener("pointerleave", () => gsap.to(giro, { timeScale: 1, duration: 0.7 }));
+          card.addEventListener("pointerenter", () => { obiettivo = 0.22; });
+          card.addEventListener("pointerleave", () => { obiettivo = 1; });
         });
       }
 
@@ -666,7 +735,7 @@
   {
     const svg = $("#maniTrails");
     if (svg && !reduceMotion) {
-      const isDesk = window.matchMedia("(min-width: 768px)").matches;
+      const isDesk = window.matchMedia("(min-width: 1024px)").matches;
       $$("path", svg).forEach((path, i) => {
         const len = path.getTotalLength();
         const coda = 130 + i * 70;
@@ -676,7 +745,7 @@
         const dove = {
           trigger: ".manifesto",
           start: isDesk ? "top top" : "top 85%",
-          end: isDesk ? "+=130%" : "bottom top",
+          end: isDesk ? "+=300%" : "bottom top",
           scrub: 0.25 + i * 0.18
         };
         gsap.set(path, { strokeDasharray: coda + " " + (len + coda), strokeDashoffset: coda });
@@ -703,32 +772,6 @@
             .to(pallino, { scale: 1.12, duration: 0.14, ease: "power2.inOut" });
       });
     }
-  }
-
-  /* ---------- apertura della valle: schermo fermo, immagine da destra ---------- */
-  {
-    const mmOpen = gsap.matchMedia();
-    mmOpen.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-      const open = $("#valleOpen");
-      const img = $("#voImg");
-      const kicker = $(".vo-head .sec-kicker");
-      const title = $(".vo-head .sec-title");
-      if (!open || !img) return;
-      gsap.set(img, { xPercent: 120, autoAlpha: 0 });
-      gsap.set([kicker, title], { autoAlpha: 0, y: 36 });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: open, start: "top top", end: "+=115%",
-          pin: true, scrub: 0.7, anticipatePin: 1,
-          invalidateOnRefresh: true, refreshPriority: 2
-        }
-      })
-        .to(img, { xPercent: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out" })
-        .to(kicker, { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.6)
-        .to(title, { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.68)
-        .to({}, { duration: 0.16 });
-      return () => gsap.set([img, kicker, title], { clearProps: "all" });
-    });
   }
 
   /* ---------- reveal a cascata sui gruppi ---------- */
