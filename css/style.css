@@ -184,7 +184,7 @@ body.is-loaded .preloader { display: none; }
   color: var(--paper-dim);
   padding: 12px 2px;
   position: relative;
-  transition: color 0.25s ease;
+  transition: color 0.25s ease, background-position 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-links a:hover { color: var(--paper); }
 
@@ -244,7 +244,6 @@ body.is-loaded .preloader { display: none; }
   text-decoration: none;
   border-bottom: 1px solid var(--line);
 }
-.menu-link.lk::before { bottom: 0.35rem; }
 .ml-num { color: var(--paper-faint); font-size: 0.68rem; }
 .ml-txt {
   font-family: var(--font-display);
@@ -917,7 +916,7 @@ section { position: relative; }
   font-size: 0.98rem;
 }
 .fcol-label { color: var(--oro); margin-bottom: 1rem; }
-.fcol a { text-decoration: none; transition: color 0.2s ease; }
+.fcol a { text-decoration: none; transition: color 0.2s ease, background-position 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 .fcol a:hover { color: var(--paper); }
 .fcol-quota { color: var(--paper-faint); margin-top: 1.2rem; }
 
@@ -1374,9 +1373,6 @@ html.static-mode .scroll-hint svg { animation: none; }
   min-height: 44px;
   line-height: 20px;
 }
-.mappa figcaption a.lk::before,
-.fcol a.lk::before,
-.menu-aside a.lk::before { bottom: 12px; }
 .fcol p a { padding: 12px 0 10px; }
 @media (max-width: 767px) {
   .footer-legal .totop { min-height: 48px; display: inline-flex; align-items: center; }
@@ -1415,107 +1411,62 @@ html.static-mode .scroll-hint svg { animation: none; }
 .nav-links a { padding: 15px 2px; }
 
 /* ============================================================
-   LINK ANIMATI — port di Skiper UI "skiper40" (Link000–Link005)
-   Componente originale in React/Tailwind di @gurvinder-singh02
-   (skiper-ui.com), qui riscritto in CSS puro per questo sito.
-   Attribuzione richiesta dalla licenza della versione free.
+   LINK "CALICE" — niente righe sotto: in hover il testo si
+   riempie d'oro dal basso verso l'alto, come vino nel bicchiere
    ============================================================ */
 .lk {
   position: relative;
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: inherit;
+  color: var(--paper-dim);
+  background-image: linear-gradient(
+    to top,
+    var(--oro) 0%,
+    var(--oro) 46%,
+    var(--oro-soft) 50%,
+    currentColor 54%,
+    currentColor 100%
+  );
+  background-size: 100% 220%;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lk:hover,
+.lk:focus-visible {
+  background-position: 0 100%;
 }
 
-/* la barra condivisa da tutte le varianti */
-.lk::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background: currentColor;
-  pointer-events: none;
-  transform: scaleX(0);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* colori pieni dove il riposo non è attenuato */
+.menu-link.lk, .totop.lk { color: var(--paper); }
+.wp-link.lk { color: var(--wcol); }
 
-/* la freccia dei link esterni, in currentColor via mask */
-.lk-ext::after,
-.lk-rise::after,
-.lk-fill::after {
+/* la freccia dei link esterni resta, senza riga */
+.lk {
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004' stroke='%23000' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.lk-ext::after {
   content: "";
   width: 0.55em;
   height: 0.55em;
   margin-left: 0.4em;
   flex: 0 0 auto;
-  background: currentColor;
+  background: var(--oro);
   -webkit-mask: var(--arrow) no-repeat center / contain;
   mask: var(--arrow) no-repeat center / contain;
   opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-3px, 3px);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.lk {
-  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004' stroke='%23000' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-/* 000 — la riga entra da sinistra ed esce da destra */
-.lk-wipe::before { bottom: 0; height: 0.05em; transform-origin: right; }
-.lk-wipe:hover::before,
-.lk-wipe:focus-visible::before { transform-origin: left; transform: scaleX(1); }
-
-/* 001 — come sopra, con freccia che sale */
-.lk-ext::before { bottom: 0; height: 0.05em; transform-origin: right; }
-.lk-ext:hover::before,
-.lk-ext:focus-visible::before { transform-origin: left; transform: scaleX(1); }
-.lk-ext::after { transform: translateY(3px); }
 .lk-ext:hover::after,
-.lk-ext:focus-visible::after { transform: translateY(0); opacity: 1; }
-
-/* 002 — verso opposto */
-.lk-back::before { bottom: 0; height: 0.05em; transform-origin: left; }
-.lk-back:hover::before,
-.lk-back:focus-visible::before { transform-origin: right; transform: scaleX(1); }
-
-/* 003 — cresce dal centro */
-.lk-center::before { bottom: 0.02em; height: 0.045em; transform-origin: center; }
-.lk-center:hover::before,
-.lk-center:focus-visible::before { transform: scaleX(1); }
-
-/* 004 — la banda sale e inverte il testo */
-.lk-rise { padding: 0 0.5em; }
-.lk-rise::before {
-  bottom: 0;
-  height: 0;
-  transform: scaleX(1);
-  background: var(--paper);
-  mix-blend-mode: difference;
-  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.lk-rise:hover::before,
-.lk-rise:focus-visible::before { height: 100%; }
-.lk-rise::after { transform: translateY(3px); }
-.lk-rise:hover::after,
-.lk-rise:focus-visible::after { transform: translateY(0) rotate(45deg); opacity: 1; }
-
-/* 005 — la banda riempie da sinistra e inverte il testo */
-.lk-fill { padding: 0 0.5em; }
-.lk-fill::before {
-  top: 0;
-  height: 100%;
-  transform-origin: left;
-  background: var(--paper);
-  mix-blend-mode: difference;
-}
-.lk-fill:hover::before,
-.lk-fill:focus-visible::before { transform: scaleX(1); }
-.lk-fill::after { transform: translateX(-4px) rotate(45deg); }
-.lk-fill:hover::after,
-.lk-fill:focus-visible::after { transform: translateX(0) rotate(45deg); opacity: 1; }
+.lk-ext:focus-visible::after { opacity: 1; transform: translate(0, 0); }
 
 @media (prefers-reduced-motion: reduce) {
-  .lk::before, .lk::after { transition: none; }
-  .lk-ext::after, .lk-rise::after, .lk-fill::after { opacity: 1; transform: none; }
+  .lk, .lk-ext::after { transition: none; }
+  .lk-ext::after { opacity: 1; transform: none; }
 }
 
 /* l'invito alla degustazione resta un bersaglio comodo */
