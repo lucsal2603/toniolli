@@ -101,6 +101,13 @@
   }
 
   let released = false;
+  let heroTl = null, introPartita = false;
+  function startIntro() {
+    if (introPartita) return heroTl;
+    introPartita = true;
+    heroTl = heroIntro();
+    return heroTl;
+  }
   function releasePage(force) {
     if (released) return;
     released = true;
@@ -108,8 +115,8 @@
     document.documentElement.style.overflow = "";
     gsap.set(preloader, { display: "none" });
     if (lenis) lenis.start();
-    const tl = heroIntro();
-    if (force && tl) tl.progress(1); // rAF inaffidabile: stato finale subito
+    startIntro();
+    if (force && heroTl) heroTl.progress(1); // rAF inaffidabile: stato finale subito
   }
 
   if (reduceMotion || document.hidden || (staticMode && location.hash)) {
@@ -124,16 +131,27 @@
     window.scrollTo(0, 0);
     const preVal = { v: 238 };
     const preLogo = $("#preLogo");
+    const monte = $("#preMonte");
+    const lunghezza = monte.getTotalLength();
     gsap.set(preLogo, { autoAlpha: 0, y: 30, scale: 0.965 });
+    gsap.set(monte, { strokeDasharray: lunghezza, strokeDashoffset: lunghezza });
     const ptl = gsap.timeline({ onComplete: releasePage });
     ptl.to(preLogo, { autoAlpha: 1, y: 0, scale: 1, duration: 1.0, ease: "expo.out" }, 0.1)
       .to(preVal, {
         v: 575, duration: 1.1, ease: "power2.out",
         onUpdate: () => { $("#preVal").textContent = Math.round(preVal.v); }
       }, 0.15)
-      .to(preloader, { yPercent: -100, duration: 0.85, ease: "power4.inOut" }, "+=0.3");
+      // il crinale si disegna da destra fino a chiudersi a sinistra
+      .to(monte, { strokeDashoffset: 0, duration: 0.85, ease: "power2.inOut" }, "+=0.2")
+      .add("apertura", "-=0.05")
+      .to(".pre-inner", { autoAlpha: 0, y: -22, duration: 0.3, ease: "power2.in" }, "apertura")
+      .add(() => { if (lenis) lenis.start(); startIntro(); }, "apertura+=0.18")
+      // il versante sopra la linea sale, quello sotto scende: appare il sito
+      .to(".pre-sopra", { yPercent: -100, duration: 0.9, ease: "power4.inOut" }, "apertura+=0.1")
+      .to(".pre-sotto", { yPercent: 100, duration: 0.9, ease: "power4.inOut" }, "apertura+=0.1")
+      .to(monte, { autoAlpha: 0, duration: 0.35 }, "apertura+=0.5");
     // rete di sicurezza: se i rAF vengono sospesi (tab in background), sblocca comunque
-    setTimeout(() => { if (!released) { ptl.progress(1); releasePage(true); } }, 3800);
+    setTimeout(() => { if (!released) { ptl.progress(1); releasePage(true); } }, 4600);
   }
 
   /* ============================================================
