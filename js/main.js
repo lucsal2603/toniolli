@@ -827,6 +827,43 @@
   }
 
   /* ============================================================
+     QUOTA ISLAND — si apre a molla quando cambia la zona
+     ============================================================ */
+  const island = $("#island");
+  const islQuota = $("#islQuota");
+  const islZone = $("#islZone");
+  let islUltima = "";
+  let islTimer = null;
+
+  function islandChiudi() {
+    if (!island.classList.contains("aperta")) return;
+    const da = island.offsetWidth;
+    gsap.to(islZone, { autoAlpha: 0, scale: 0.8, filter: "blur(5px)", duration: 0.18, ease: "power2.in",
+      onComplete: () => {
+        island.classList.remove("aperta");
+        const a = island.offsetWidth;
+        gsap.fromTo(island, { width: da }, { width: a, duration: 0.5, ease: "back.out(1.4)",
+          clearProps: "width" });
+      } });
+  }
+
+  function islandAnnuncia(nome) {
+    if (!island || nome === islUltima) return;
+    islUltima = nome;
+    if (reduceMotion) { islZone.textContent = nome; island.classList.add("aperta"); return; }
+    clearTimeout(islTimer);
+    islZone.textContent = nome;
+    const da = island.offsetWidth;
+    island.classList.add("aperta");
+    const a = island.offsetWidth;
+    // molla con rimbalzo ~0.5 e contenuto che entra da blur e scala 0.8
+    gsap.fromTo(island, { width: da }, { width: a, duration: 0.55, ease: "back.out(2.1)", clearProps: "width" });
+    gsap.fromTo(islZone, { autoAlpha: 0, scale: 0.8, filter: "blur(5px)" },
+      { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.32, delay: 0.1, ease: "power2.out" });
+    islTimer = setTimeout(islandChiudi, 2400);
+  }
+
+  /* ============================================================
      ALTIMETRO — 238 m (Avisio) → 905 m (vigne alte)
      (creato DOPO i pin così le posizioni includono gli spacer)
      ============================================================ */
@@ -840,6 +877,7 @@
     onUpdate: (self) => {
       const q = Math.round(QUOTA_MIN + (QUOTA_MAX - QUOTA_MIN) * self.progress);
       altiVal.textContent = q;
+      islQuota.textContent = q + " M";
       gsap.set(altiMarker, { top: `${self.progress * 100}%` });
     }
   });
@@ -848,8 +886,8 @@
     ScrollTrigger.create({
       trigger: sec,
       start: "top 55%", end: "bottom 55%",
-      onToggle: (self) => { if (self.isActive) altiZone.textContent = sec.dataset.zone; },
-      onUpdate: (self) => { if (self.isActive && altiZone.textContent !== sec.dataset.zone) altiZone.textContent = sec.dataset.zone; }
+      onToggle: (self) => { if (self.isActive) { altiZone.textContent = sec.dataset.zone; islandAnnuncia(sec.dataset.zone); } },
+      onUpdate: (self) => { if (self.isActive && altiZone.textContent !== sec.dataset.zone) { altiZone.textContent = sec.dataset.zone; islandAnnuncia(sec.dataset.zone); } }
     });
   });
 

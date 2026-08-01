@@ -1635,3 +1635,67 @@ a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
   .fg-fill, .fg-bolle { clip-path: none; }
   .fg-bolle { opacity: 1; }
 }
+
+/* ============================================================
+   ACCENTI CORSIVI — Cormorant al posto dell'italico di Erode
+   ============================================================ */
+:root { --font-accent: "Cormorant", "Iowan Old Style", Georgia, serif; }
+.ht-3 em,
+.sec-title em,
+.wp-name em,
+.fw-italic em,
+.visita-title em {
+  font-family: var(--font-accent);
+  font-weight: 600;
+  font-size: 1.06em;
+  letter-spacing: 0;
+}
+.wp-ghost,
+.marquee-inner span,
+.bc-strong,
+.fam-quote {
+  font-family: var(--font-accent);
+  font-weight: 600;
+}
+.bc-strong { font-size: 1.55rem; }
+.fam-quote { font-size: clamp(1.35rem, 2vw, 1.75rem); }
+/* niente corsivo Erode nemmeno in hover sul menu */
+.menu-link:hover .ml-txt,
+.menu-link:focus-visible .ml-txt { font-style: normal; }
+
+/* ============================================================
+   QUOTA ISLAND — pillola che si apre a molla sui cambi di zona
+   (animazioni portate da smoothui/dynamic-island: spring con
+   rimbalzo, contenuto che entra da blur e scala 0.8)
+   ============================================================ */
+.island {
+  position: fixed;
+  top: calc(var(--nav-h) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 205;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: rgba(18, 15, 10, 0.85);
+  border: 1px solid rgba(239, 231, 214, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+body.is-loaded .island { opacity: 1; }
+.isl-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--oro);
+  flex: 0 0 auto;
+}
+.isl-quota { color: var(--paper); font-variant-numeric: tabular-nums; }
+.isl-zone { color: var(--oro-soft); display: none; }
+.island.aperta .isl-zone { display: inline; }
