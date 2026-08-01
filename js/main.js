@@ -248,7 +248,8 @@
         end: isDesktop ? "+=130%" : "bottom 60%",
         scrub: 0.4,
         pin: isDesktop,
-        anticipatePin: 1
+        anticipatePin: 1,
+        refreshPriority: 3
       }
     });
   }
@@ -269,14 +270,20 @@
     });
   });
 
-  $$(".contour").forEach((svg) => {
+  // ogni crinale ha il suo ritmo: parte in un momento diverso dagli altri
+  // e si riempie a una velocità diversa
+  const RITMI = [0.55, 2.4, 1.1, 3.1, 1.7, 0.85];
+  const PARTENZE = ["top 94%", "top 74%", "top 86%", "top 66%", "top 90%", "top 80%"];
+  const ARRIVI = ["48% 42%", "82% 46%", "60% 36%", "92% 52%", "70% 40%", "55% 30%"];
+  $$(".contour").forEach((svg, sezione) => {
     const host = svg.closest("section") || svg.parentElement;
     $$("path", svg).forEach((path, i) => {
       const len = path.getTotalLength();
+      const k = (i + sezione * 2) % RITMI.length;
       gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
       gsap.to(path, {
         strokeDashoffset: 0, ease: "none",
-        scrollTrigger: { trigger: host, start: "top 85%", end: "65% 40%", scrub: 1 + i * 0.15 }
+        scrollTrigger: { trigger: host, start: PARTENZE[k], end: ARRIVI[k], scrub: RITMI[k] }
       });
     });
   });
@@ -378,6 +385,7 @@
         scrub: 1,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        refreshPriority: 1,
         snap: { snapTo: 1 / (panels.length - 1), duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: "power2.inOut" },
         onUpdate: (self) => {
           const idx = Math.round(self.progress * (panels.length - 1));
@@ -467,12 +475,30 @@
      FOOTER — TONIOLLI gigante
      ============================================================ */
   {
-    const chars = splitChars($("#footerGiant .split"));
-    if (!reduceMotion) {
-      gsap.set(chars, { yPercent: 60, autoAlpha: 0 });
+    const giant = $("#footerGiant");
+    const fill = $("#fgFill");
+    const bolle = $("#fgBolle");
+    if (giant && fill && bolle && !reduceMotion) {
+      const scopri = { p: 0 };
+      gsap.to(scopri, {
+        p: 1, ease: "none",
+        scrollTrigger: { trigger: giant, start: "top 92%", end: "top 42%", scrub: 0.5 },
+        onUpdate: () => {
+          const taglio = "inset(0 " + (100 - scopri.p * 100).toFixed(2) + "% 0 0)";
+          fill.style.clipPath = taglio;
+          bolle.style.clipPath = taglio;
+        }
+      });
+      // le bollicine arrivano solo a scritta piena
       ScrollTrigger.create({
-        trigger: ".footer", start: "top 75%", once: true,
-        onEnter: () => gsap.to(chars, { yPercent: 0, autoAlpha: 1, duration: 1.1, stagger: 0.05, ease: "expo.out" })
+        trigger: giant, start: "top 44%",
+        onEnter: () => {
+          giant.classList.add("is-piena");
+          gsap.to(bolle, { opacity: 1, duration: 0.9, ease: "power2.out" });
+        },
+        onLeaveBack: () => {
+          gsap.to(bolle, { opacity: 0, duration: 0.4, onComplete: () => giant.classList.remove("is-piena") });
+        }
       });
     }
   }
@@ -636,13 +662,72 @@
     });
   }
 
-  /* ---------- linee dei passi del metodo ---------- */
-  if (!reduceMotion) {
-    $$(".ms-line").forEach((l) => {
-      gsap.to(l, {
-        scaleX: 1, duration: 1.1, ease: "power3.out",
-        scrollTrigger: { trigger: l.closest(".mstep"), start: "top 85%", once: true }
+  /* ---------- scie del manifesto: la punta corre, la coda insegue ---------- */
+  {
+    const svg = $("#maniTrails");
+    if (svg && !reduceMotion) {
+      const isDesk = window.matchMedia("(min-width: 768px)").matches;
+      $$("path", svg).forEach((path, i) => {
+        const len = path.getTotalLength();
+        const coda = 130 + i * 70;
+        const punta = path.cloneNode(false);
+        punta.classList.add("tip");
+        svg.appendChild(punta);
+        const dove = {
+          trigger: ".manifesto",
+          start: isDesk ? "top top" : "top 85%",
+          end: isDesk ? "+=130%" : "bottom top",
+          scrub: 0.25 + i * 0.18
+        };
+        gsap.set(path, { strokeDasharray: coda + " " + (len + coda), strokeDashoffset: coda });
+        gsap.to(path, { strokeDashoffset: -len, ease: "none", scrollTrigger: Object.assign({}, dove) });
+        gsap.set(punta, { strokeDasharray: "14 " + (len + 14), strokeDashoffset: coda - 14 });
+        gsap.to(punta, { strokeDashoffset: -len - coda + 14, ease: "none", scrollTrigger: Object.assign({}, dove) });
       });
+    }
+  }
+
+  /* ---------- percorso del metodo: righe e pallini in sequenza ---------- */
+  if (!reduceMotion) {
+    const passi = $$(".mstep");
+    if (passi.length) {
+      const perc = gsap.timeline({
+        scrollTrigger: { trigger: ".metodo-list", start: "top 80%", end: "bottom 65%", scrub: 0.6 }
+      });
+      passi.forEach((passo) => {
+        const riga = $(".ms-line", passo);
+        const pallino = $(".ms-dot", passo);
+        gsap.set(pallino, { scale: 1, backgroundColor: "rgba(210,166,75,0)" });
+        perc.to(riga, { scaleX: 1, duration: 1, ease: "none" })
+            .to(pallino, { backgroundColor: "rgba(210,166,75,1)", scale: 1.28, duration: 0.18, ease: "power2.out" }, "<0.82")
+            .to(pallino, { scale: 1.12, duration: 0.14, ease: "power2.inOut" });
+      });
+    }
+  }
+
+  /* ---------- apertura della valle: schermo fermo, immagine da destra ---------- */
+  {
+    const mmOpen = gsap.matchMedia();
+    mmOpen.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const open = $("#valleOpen");
+      const img = $("#voImg");
+      const kicker = $(".vo-head .sec-kicker");
+      const title = $(".vo-head .sec-title");
+      if (!open || !img) return;
+      gsap.set(img, { xPercent: 120, autoAlpha: 0 });
+      gsap.set([kicker, title], { autoAlpha: 0, y: 36 });
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: open, start: "top top", end: "+=115%",
+          pin: true, scrub: 0.7, anticipatePin: 1,
+          invalidateOnRefresh: true, refreshPriority: 2
+        }
+      })
+        .to(img, { xPercent: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out" })
+        .to(kicker, { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.6)
+        .to(title, { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.68)
+        .to({}, { duration: 0.16 });
+      return () => gsap.set([img, kicker, title], { clearProps: "all" });
     });
   }
 

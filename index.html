@@ -107,6 +107,12 @@
 
     <!-- ============ MANIFESTO ============ -->
     <section class="manifesto" data-zone="IL MANIFESTO">
+      <svg class="mani-trails" id="maniTrails" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M-80 470 C 90 300, 190 560, 330 400 C 470 240, 560 520, 720 370 C 860 240, 980 470, 1280 330"/>
+        <path d="M-80 250 C 120 380, 240 140, 400 270 C 560 400, 660 160, 820 290 C 960 400, 1090 210, 1280 300"/>
+        <path d="M-80 600 C 140 520, 280 660, 450 560 C 620 460, 740 620, 900 530 C 1040 450, 1150 580, 1280 500"/>
+        <path d="M-80 130 C 180 60, 300 230, 480 140 C 660 50, 800 210, 960 120 C 1090 50, 1190 160, 1280 110"/>
+      </svg>
       <div class="mani-pin" id="maniPin">
         <p class="sec-kicker mono" data-reveal>IL MANIFESTO</p>
         <blockquote class="mani-quote">
@@ -119,17 +125,22 @@
     <!-- ============ LA VALLE ============ -->
     <section class="valle" id="valle" data-zone="LA VALLE">
       <svg class="contour" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 120 C 180 90, 320 150, 520 128 S 880 96, 1200 132"/>
-        <path d="M0 240 C 200 210, 360 268, 560 246 S 900 214, 1200 252"/>
-        <path d="M0 360 C 190 332, 340 388, 540 366 S 890 336, 1200 370"/>
-        <path d="M0 480 C 210 452, 350 506, 550 486 S 900 456, 1200 490"/>
-        <path d="M0 600 C 200 574, 340 626, 540 606 S 890 578, 1200 610"/>
+        <path d="M0 140 C 150 60, 300 200, 470 120 S 800 40, 1200 150"/>
+        <path d="M0 265 C 190 300, 330 175, 520 250 S 900 320, 1200 215"/>
+        <path d="M0 385 C 120 300, 290 430, 480 340 S 830 260, 1200 400"/>
+        <path d="M0 505 C 220 560, 400 420, 610 495 S 960 570, 1200 460"/>
+        <path d="M0 625 C 160 555, 340 665, 540 590 S 900 640, 1200 585"/>
       </svg>
-      <header class="sec-head">
-        <span class="glow" aria-hidden="true"></span>
-        <p class="sec-kicker mono" data-reveal>LA VALLE</p>
-        <h2 class="sec-title" data-title>Terrazze<br><em>sul cielo.</em></h2>
-      </header>
+      <div class="valle-open" id="valleOpen">
+        <header class="sec-head vo-head">
+          <span class="glow" aria-hidden="true"></span>
+          <p class="sec-kicker mono">LA VALLE</p>
+          <h2 class="sec-title">Terrazze<br><em>sul cielo.</em></h2>
+        </header>
+        <figure class="vo-img" id="voImg">
+          <img src="assets/opt/img9216.jpg" alt="I terrazzamenti della Val di Cembra si aprono sul versante" width="1920" height="1280" loading="eager">
+        </figure>
+      </div>
       <div class="valle-grid">
         <div class="valle-copy">
           <article class="vblock" data-vimg="0">
@@ -223,10 +234,11 @@
     <!-- ============ IL METODO ============ -->
     <section class="metodo" id="metodo" data-zone="IL METODO">
       <svg class="contour contour-metodo" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 90 C 220 60, 380 130, 600 104 S 960 66, 1200 108"/>
-        <path d="M0 250 C 240 214, 400 284, 620 256 S 980 218, 1200 262"/>
-        <path d="M0 410 C 210 376, 380 444, 590 414 S 960 380, 1200 420"/>
-        <path d="M0 570 C 230 536, 390 604, 600 576 S 970 540, 1200 582"/>
+        <path d="M0 95 C 260 150, 420 30, 640 110 S 1000 175, 1200 85"/>
+        <path d="M0 235 C 100 175, 280 300, 500 225 S 880 145, 1200 245"/>
+        <path d="M0 375 C 300 445, 480 300, 700 380 S 1030 440, 1200 340"/>
+        <path d="M0 515 C 140 450, 360 570, 580 490 S 950 425, 1200 530"/>
+        <path d="M0 650 C 240 700, 430 585, 660 655 S 1010 705, 1200 615"/>
       </svg>
       <header class="sec-head">
         <span class="glow" aria-hidden="true"></span>
@@ -237,24 +249,28 @@
       <ol class="metodo-list">
         <li class="mstep" data-reveal>
           <span class="ms-line" aria-hidden="true"></span>
+          <span class="ms-dot" aria-hidden="true"></span>
           <p class="ms-tag mono">IN VIGNA</p>
           <h3 class="ms-title">Rese basse per scelta</h3>
           <p class="ms-txt">Si lascia poca uva per pianta. Su un terreno povero come questo è l'unico modo perché il grappolo arrivi maturo senza perdere acidità, e perché il vino abbia sostanza invece che volume.</p>
         </li>
         <li class="mstep" data-reveal>
           <span class="ms-line" aria-hidden="true"></span>
+          <span class="ms-dot" aria-hidden="true"></span>
           <p class="ms-tag mono">RACCOLTA</p>
           <h3 class="ms-title">Cassette piccole, uva intera</h3>
           <p class="ms-txt">Contenitori bassi e a mano, così i grappoli non si schiacciano sotto il loro peso durante la discesa. L'uva arriva in cantina intera: nessuna ossidazione, nessuna fermentazione partita per conto suo.</p>
         </li>
         <li class="mstep" data-reveal>
           <span class="ms-line" aria-hidden="true"></span>
+          <span class="ms-dot" aria-hidden="true"></span>
           <p class="ms-tag mono">IN CANTINA</p>
           <h3 class="ms-title">Pressatura soffice</h3>
           <p class="ms-txt">Si spreme piano e si tiene solo la parte più pulita del mosto. Per le basi spumante è la fase che decide tutto: bastano pochi decimi di pressione in più per portarsi dietro amaro e colore che poi non si tolgono.</p>
         </li>
         <li class="mstep" data-reveal>
           <span class="ms-line" aria-hidden="true"></span>
+          <span class="ms-dot" aria-hidden="true"></span>
           <p class="ms-tag mono">ATTESA</p>
           <h3 class="ms-title">Il tempo sui lieviti</h3>
           <p class="ms-txt">Per il metodo classico la seconda fermentazione avviene in bottiglia, e poi si aspetta: mesi al fresco, coricati, mentre i lieviti cedono al vino la crosta di pane e la trama fine che la montagna da sola non darebbe.</p>
@@ -281,10 +297,10 @@
     <!-- ============ I QUATTRO BAITI ============ -->
     <section class="baitgrid" data-zone="I QUATTRO BAITI">
       <svg class="contour contour-baiti" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 110 C 200 78, 360 146, 580 118 S 950 80, 1200 122"/>
-        <path d="M0 280 C 230 244, 390 316, 610 286 S 970 248, 1200 292"/>
-        <path d="M0 450 C 200 416, 370 486, 580 456 S 950 420, 1200 462"/>
-        <path d="M0 620 C 240 586, 400 654, 620 626 S 980 590, 1200 632"/>
+        <path d="M0 120 C 90 45, 210 175, 330 100 C 470 20, 610 165, 760 95 S 1050 30, 1200 125"/>
+        <path d="M0 275 C 170 340, 300 210, 460 285 C 640 365, 790 230, 950 300 S 1120 340, 1200 265"/>
+        <path d="M0 430 C 110 355, 250 480, 400 405 C 570 320, 700 465, 870 395 S 1080 340, 1200 435"/>
+        <path d="M0 585 C 200 655, 350 520, 520 600 C 700 680, 850 545, 1010 615 S 1150 640, 1200 570"/>
       </svg>
       <header class="sec-head">
         <span class="glow" aria-hidden="true"></span>
@@ -503,10 +519,10 @@
     <!-- ============ TIMELINE ============ -->
     <section class="storia" data-zone="LA STORIA">
       <svg class="contour contour-storia" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 110 C 200 78, 360 146, 580 118 S 950 80, 1200 122"/>
-        <path d="M0 280 C 230 244, 390 316, 610 286 S 970 248, 1200 292"/>
-        <path d="M0 450 C 200 416, 370 486, 580 456 S 950 420, 1200 462"/>
-        <path d="M0 620 C 240 586, 400 654, 620 626 S 980 590, 1200 632"/>
+        <path d="M0 165 C 400 45, 700 265, 1200 135"/>
+        <path d="M0 320 C 350 430, 720 190, 1200 305"/>
+        <path d="M0 470 C 300 350, 640 590, 1200 445"/>
+        <path d="M0 620 C 420 720, 780 500, 1200 610"/>
       </svg>
       <header class="sec-head">
         <span class="glow" aria-hidden="true"></span>
@@ -617,7 +633,11 @@
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer" data-zone="LA CIMA">
-    <p class="footer-giant" id="footerGiant" aria-hidden="true" translate="no"><span class="split" data-split>TONIOLLI</span></p>
+    <p class="footer-giant" id="footerGiant" aria-hidden="true" translate="no">
+      <span class="fg-base">TONIOLLI</span>
+      <span class="fg-fill" id="fgFill">TONIOLLI</span>
+      <span class="fg-bolle" id="fgBolle">TONIOLLI</span>
+    </p>
     <div class="footer-grid">
       <div class="fcol">
         <p class="mono fcol-label">INDIRIZZO</p>

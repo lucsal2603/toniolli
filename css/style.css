@@ -528,10 +528,13 @@ section { position: relative; }
   overflow: clip;
   display: flex; align-items: center;
 }
-.baiti-media { position: absolute; inset: -12% 0; }
+.baiti-media { position: absolute; inset: -8% 0; }
 .baiti-media img {
   width: 100%; height: 100%;
   object-fit: cover;
+  /* i due vignaioli stanno nel terzo sinistro della foto:
+     il ritaglio va tenuto lì o uno dei due resta fuori */
+  object-position: 14% center;
 }
 .baiti-veil {
   position: absolute; inset: 0;
@@ -948,6 +951,10 @@ section { position: relative; }
   .stag-item { width: min(72vw, 320px); }
 
   .baiti { min-height: 110svh; }
+  /* a schermo stretto il taglio a tutta altezza terrebbe dentro un solo
+     vignaiolo: la foto tiene la sua proporzione in una fascia alta */
+  .baiti-media { inset: 0 0 auto; height: 56svh; overflow: hidden; }
+  .baiti-media img { height: 122%; object-position: 8% center; }
   .baiti-title { font-size: clamp(4.4rem, 26vw, 8rem); top: 16%; }
   .baiti-card { margin: 40vh auto 8vh; }
 
@@ -1476,3 +1483,126 @@ html.static-mode .scroll-hint svg { animation: none; }
 
 /* l'invito alla degustazione resta un bersaglio comodo */
 a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
+
+/* ============================================================
+   APERTURA DELLA VALLE — lo schermo resta fermo, l'immagine
+   entra da destra e si blocca, poi arrivano le scritte
+   ============================================================ */
+.valle-open {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  padding: calc(var(--nav-h) + 2vh) var(--gutter) 6vh;
+  overflow: clip;
+}
+.vo-head { align-self: center; }
+.vo-img {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.vo-img img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 1023px) {
+  .valle-open {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 4rem var(--gutter) 0;
+    gap: 2rem;
+  }
+  .vo-img { order: -1; }
+}
+
+/* ============================================================
+   SCIE DEL MANIFESTO — creste che attraversano lo schermo,
+   la coda insegue la punta e sparisce quando questa esce
+   ============================================================ */
+.manifesto { position: relative; overflow: clip; }
+.mani-trails {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.mani-trails path {
+  fill: none;
+  stroke: var(--oro);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+.mani-trails path.tip {
+  stroke: var(--oro-soft);
+  stroke-width: 2;
+  opacity: 0.95;
+}
+.mani-pin { position: relative; z-index: 1; }
+
+/* ============================================================
+   PERCORSO DEL METODO — i pallini si riempiono in sequenza
+   ============================================================ */
+.ms-dot {
+  position: absolute;
+  top: -4px; left: -1px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--oro);
+  background: transparent;
+  transform-origin: center;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .ms-dot { top: -5px; }
+}
+
+/* ============================================================
+   TONIOLLI DEL FONDO — si riempie da sinistra scorrendo,
+   e a riempimento finito dentro le lettere salgono le bollicine
+   ============================================================ */
+.footer-giant { position: relative; }
+.footer-giant span {
+  display: block;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.fg-base {
+  color: transparent;
+  -webkit-text-stroke: 1.4px rgba(239, 231, 214, 0.34);
+}
+@supports not (-webkit-text-stroke: 1px black) {
+  .fg-base { color: rgba(239, 231, 214, 0.3); }
+}
+.fg-fill,
+.fg-bolle {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 100% 0 0);
+}
+.fg-fill { color: var(--paper); }
+.fg-bolle {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: repeat;
+  background-image:
+    radial-gradient(circle at 26% 72%, var(--oro) 0 2.6px, transparent 3.1px),
+    radial-gradient(circle at 71% 28%, var(--oro) 0 1.9px, transparent 2.4px),
+    radial-gradient(circle at 47% 14%, var(--oro) 0 3.3px, transparent 3.9px);
+  background-size: 78px 118px, 108px 88px, 142px 162px;
+  opacity: 0;
+}
+.footer-giant.is-piena .fg-bolle {
+  animation: bolleNelleLettere 9s linear infinite;
+}
+@keyframes bolleNelleLettere {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to   { background-position: 0 -118px, 0 -88px, 0 -162px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-giant.is-piena .fg-bolle { animation: none; }
+  .fg-fill, .fg-bolle { clip-path: none; }
+  .fg-bolle { opacity: 1; }
+}
