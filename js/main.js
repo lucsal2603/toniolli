@@ -132,7 +132,18 @@
     const preVal = { v: 238 };
     const preLogo = $("#preLogo");
     const monte = $("#preMonte");
-    const lunghezza = monte.getTotalLength();
+    // con vector-effect: non-scaling-stroke i trattini vivono in pixel di
+    // schermo, mentre getTotalLength misura nel viewBox: con lo schermo più
+    // largo il tratteggio avvolgeva, mostrando prima la coda in basso a
+    // sinistra e lasciando poi un varco. Misuro il crinale sullo schermo.
+    const puntiMonte = [[100, 100], [75, 68.6], [66, 80], [50, 24.3], [34, 80], [25, 68.6], [0, 100]];
+    let lunghezza = 0;
+    for (let i = 1; i < puntiMonte.length; i++) {
+      const dx = (puntiMonte[i][0] - puntiMonte[i - 1][0]) / 100 * window.innerWidth;
+      const dy = (puntiMonte[i][1] - puntiMonte[i - 1][1]) / 100 * window.innerHeight;
+      lunghezza += Math.hypot(dx, dy);
+    }
+    lunghezza *= 1.03;
     gsap.set(preLogo, { autoAlpha: 0, y: 30, scale: 0.965 });
     gsap.set(monte, { strokeDasharray: lunghezza, strokeDashoffset: lunghezza });
     const ptl = gsap.timeline({ onComplete: releasePage });
@@ -510,6 +521,43 @@
   }
 
   /* ============================================================
+     SCHEDE TECNICHE — apertura gommosa al posto dello scatto
+     ============================================================ */
+  $$(".wp-scheda").forEach((det) => {
+    const sum = $("summary", det);
+    const lista = $(".ws-list", det);
+    if (!sum || !lista) return;
+    let inCorso = false;
+    sum.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (inCorso) return;
+      if (reduceMotion) { det.open = !det.open; return; }
+      inCorso = true;
+      if (!det.open) {
+        det.open = true;
+        gsap.set(lista, { height: 0, autoAlpha: 0, overflow: "hidden" });
+        const h = lista.scrollHeight;
+        gsap.timeline({ onComplete: () => { gsap.set(lista, { clearProps: "height,overflow" }); inCorso = false; } })
+          .to(lista, { height: h, duration: 0.62, ease: "back.out(1.5)" }, 0)
+          .to(lista, { autoAlpha: 1, duration: 0.28 }, 0.1)
+          .fromTo($$(".ws-row", det),
+            { y: 16, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.42, stagger: 0.03, ease: "back.out(2)" }, 0.12);
+      } else {
+        gsap.set(lista, { overflow: "hidden" });
+        gsap.to(lista, {
+          height: 0, autoAlpha: 0, duration: 0.34, ease: "power2.in",
+          onComplete: () => {
+            det.open = false;
+            gsap.set(lista, { clearProps: "height,overflow,opacity,visibility" });
+            inCorso = false;
+          }
+        });
+      }
+    });
+  });
+
+  /* ============================================================
      LA FAMIGLIA — parole clip reveal
      ============================================================ */
   if (!reduceMotion) {
@@ -785,9 +833,11 @@
         const riga = $(".ms-line", passo);
         const pallino = $(".ms-dot", passo);
         gsap.set(pallino, { scale: 1, backgroundColor: "rgba(210,166,75,0)" });
+        // il pallino sta all'inizio del proprio tratto: si accende
+        // nell'istante in cui la linea lo raggiunge, non a fine corsa
         perc.to(riga, { scaleX: 1, duration: 1, ease: "none" })
-            .to(pallino, { backgroundColor: "rgba(210,166,75,1)", scale: 1.28, duration: 0.18, ease: "power2.out" }, "<0.82")
-            .to(pallino, { scale: 1.12, duration: 0.14, ease: "power2.inOut" });
+            .to(pallino, { backgroundColor: "rgba(210,166,75,1)", scale: 1.28, duration: 0.16, ease: "power2.out" }, "<")
+            .to(pallino, { scale: 1.12, duration: 0.14, ease: "power2.inOut" }, "<0.16");
       });
     }
   }
@@ -827,43 +877,6 @@
   }
 
   /* ============================================================
-     QUOTA ISLAND — si apre a molla quando cambia la zona
-     ============================================================ */
-  const island = $("#island");
-  const islQuota = $("#islQuota");
-  const islZone = $("#islZone");
-  let islUltima = "";
-  let islTimer = null;
-
-  function islandChiudi() {
-    if (!island.classList.contains("aperta")) return;
-    const da = island.offsetWidth;
-    gsap.to(islZone, { autoAlpha: 0, scale: 0.8, filter: "blur(5px)", duration: 0.18, ease: "power2.in",
-      onComplete: () => {
-        island.classList.remove("aperta");
-        const a = island.offsetWidth;
-        gsap.fromTo(island, { width: da }, { width: a, duration: 0.5, ease: "back.out(1.4)",
-          clearProps: "width" });
-      } });
-  }
-
-  function islandAnnuncia(nome) {
-    if (!island || nome === islUltima) return;
-    islUltima = nome;
-    if (reduceMotion) { islZone.textContent = nome; island.classList.add("aperta"); return; }
-    clearTimeout(islTimer);
-    islZone.textContent = nome;
-    const da = island.offsetWidth;
-    island.classList.add("aperta");
-    const a = island.offsetWidth;
-    // molla con rimbalzo ~0.5 e contenuto che entra da blur e scala 0.8
-    gsap.fromTo(island, { width: da }, { width: a, duration: 0.55, ease: "back.out(2.1)", clearProps: "width" });
-    gsap.fromTo(islZone, { autoAlpha: 0, scale: 0.8, filter: "blur(5px)" },
-      { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.32, delay: 0.1, ease: "power2.out" });
-    islTimer = setTimeout(islandChiudi, 2400);
-  }
-
-  /* ============================================================
      ALTIMETRO — 238 m (Avisio) → 905 m (vigne alte)
      (creato DOPO i pin così le posizioni includono gli spacer)
      ============================================================ */
@@ -877,7 +890,6 @@
     onUpdate: (self) => {
       const q = Math.round(QUOTA_MIN + (QUOTA_MAX - QUOTA_MIN) * self.progress);
       altiVal.textContent = q;
-      islQuota.textContent = q + " M";
       gsap.set(altiMarker, { top: `${self.progress * 100}%` });
     }
   });
@@ -886,8 +898,8 @@
     ScrollTrigger.create({
       trigger: sec,
       start: "top 55%", end: "bottom 55%",
-      onToggle: (self) => { if (self.isActive) { altiZone.textContent = sec.dataset.zone; islandAnnuncia(sec.dataset.zone); } },
-      onUpdate: (self) => { if (self.isActive && altiZone.textContent !== sec.dataset.zone) { altiZone.textContent = sec.dataset.zone; islandAnnuncia(sec.dataset.zone); } }
+      onToggle: (self) => { if (self.isActive) altiZone.textContent = sec.dataset.zone; },
+      onUpdate: (self) => { if (self.isActive && altiZone.textContent !== sec.dataset.zone) altiZone.textContent = sec.dataset.zone; }
     });
   });
 
