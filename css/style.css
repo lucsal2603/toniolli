@@ -447,17 +447,7 @@ section { position: relative; }
   stroke-width: 1;
 }
 
-.valle-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: clamp(2rem, 6vw, 6rem);
-  padding: clamp(3rem, 8vh, 6rem) var(--gutter) 0;
-  align-items: start;
-}
-
-/* la coda in fondo garantisce corsa allo sticky fino all'ultimo blocco */
-.valle-copy { display: flex; flex-direction: column; gap: 38vh; padding: 14vh 0 max(24vh, 29vw); }
-.vblock { max-width: 42ch; }
+.vstep { max-width: 42ch; }
 .vb-num {
   color: var(--oro);
   border: 1px solid var(--line);
@@ -466,30 +456,23 @@ section { position: relative; }
   display: grid; place-items: center;
   margin-bottom: 1.3rem;
 }
-.vblock h3 {
+.vstep h3 {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 2.6vw, 2.3rem);
   font-weight: 500;
   line-height: 1.1;
   margin-bottom: 0.9rem;
 }
-.vblock p { color: var(--paper-dim); }
+.vstep > p:not(.vb-num) { color: var(--paper-dim); }
 
-.valle-media {
-  /* si aggancia a metà viewport e risale di mezza altezza:
-     centratura esatta senza consumare la corsa dello sticky */
-  position: sticky;
-  top: 50svh;
-  translate: 0 -50%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 2px;
-}
 .vimg {
   position: absolute; inset: 0;
   opacity: 0;
   transition: opacity 0.7s ease;
 }
+/* nella scena le figure le guida GSAP: la transition qui sopra
+   combatterebbe lo scrub facendo arrivare le sfumature in ritardo */
+.mani-pin .vimg { transition: none; }
 .vimg.is-active { opacity: 1; }
 .vimg img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -939,14 +922,25 @@ section { position: relative; }
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
-  .altimeter { display: none; }
-  .valle-grid { grid-template-columns: 1fr; }
-  .valle-media { position: relative; top: auto; translate: none; order: -1; }
-  .valle-copy { gap: 5rem; padding: 3rem 0 1rem; }
+  .altimeter { right: 8px; gap: 0.4rem; }
+  .alti-readout { font-size: 0.78rem; }
+  .alti-zone { display: none; }
+  .alti-track { height: 16svh; min-height: 90px; }
+  .alti-cap { display: none; }
+  /* famiglia: l'immagine resta agganciata in alto e il testo le scorre sopra */
   .fam-grid { grid-template-columns: 1fr; }
-  .fam-media { position: relative; top: auto; height: auto; display: block; max-width: 480px; }
-  .fam-img { max-height: none; }
-  .fam-copy { padding-bottom: 0; }
+  .fam-media {
+    position: sticky; top: calc(var(--nav-h) + 4px);
+    height: auto; display: block; max-width: none; z-index: 1;
+  }
+  .fam-img { max-height: 38svh; }
+  .fam-chips { display: none; }
+  .fam-copy {
+    position: relative; z-index: 2;
+    background: var(--ink);
+    padding: 1.6rem 0 0;
+    margin-top: 1.2rem;
+  }
 }
 
 @media (max-width: 767px) {
@@ -986,23 +980,7 @@ section { position: relative; }
   .baiti-title { font-size: clamp(4.4rem, 26vw, 8rem); top: 16%; }
   .baiti-card { margin: 40vh auto 8vh; }
 
-  .wine-panel {
-    grid-template-columns: 1fr;
-    gap: 1.8rem;
-    min-height: auto;
-    padding: 5.5rem var(--gutter) 4.5rem;
-    border-bottom: 1px solid var(--line);
-  }
-  .wp-bottle { height: min(52svh, 420px); }
   .wine-panel { --ghost-size: clamp(2.2rem, 11vw, 3.6rem) !important; }
-  .wp-ghost {
-    top: 1.4rem; left: var(--gutter);
-    max-width: min(78%, calc(100% - var(--gutter) * 4));
-    transform: none;
-    opacity: 0.2;
-  }
-  .wines-track { display: block; width: auto; }
-  .wines-progress { display: none; }
   .wines-head { padding-top: 5rem; padding-bottom: 2.5rem; }
 
   .visita { min-height: 100svh; }
@@ -1379,31 +1357,35 @@ html.static-mode .scroll-hint svg { animation: none; }
 }
 
 /* ============================================================
-   TABLET — sotto i 1024px le etichette si impilano invece di
-   scorrere in orizzontale: a quella larghezza il pannello
-   affiancato non ci sta in altezza.
+   SCHERMI STRETTI — stesse etichette orizzontali dei grandi,
+   pannello riorganizzato in verticale dentro ogni schermata
    ============================================================ */
 @media (max-width: 1023px) {
   .wine-panel {
     grid-template-columns: 1fr;
-    gap: 1.8rem;
-    min-height: auto;
-    padding: 5.5rem var(--gutter) 4.5rem;
-    border-bottom: 1px solid var(--line);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1.2rem;
+    align-items: start;
+    padding: calc(var(--nav-h) + 1vh) var(--gutter) 10vh;
   }
-  .wp-bottle { height: min(52svh, 420px); }
-  .wines-track { display: block; width: auto; }
-  .wines-progress { display: none; }
-  .wines-head { padding-top: 5rem; padding-bottom: 2.5rem; }
+  .wp-bottle { height: min(30svh, 320px); justify-self: center; align-self: end; }
+  .wp-info { max-width: 56ch; align-self: start; }
+  .wp-name { font-size: clamp(1.9rem, 7vw, 2.9rem); }
+  .wp-desc { font-size: 0.95rem; margin-bottom: 1.1rem; }
+  .wp-chips { margin-bottom: 1.2rem; }
+  .wp-chips li { padding: 0.45rem 0.8rem; font-size: 0.6rem; }
+  .wp-scheda .ws-list { max-height: 30svh; overflow-y: auto; overscroll-behavior: contain; }
   .wp-ghost {
-    top: 1.4rem; left: var(--gutter);
-    max-width: min(78%, calc(100% - var(--gutter) * 4));
+    top: calc(var(--nav-h) + 0.4rem); left: var(--gutter);
+    max-width: min(78%, calc(100% - var(--gutter) * 2));
     transform: none;
     opacity: 0.2;
   }
+  .wines-progress { bottom: 2.6vh; }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
   .wine-panel { --ghost-size: clamp(3rem, 7vw, 5.4rem); }
+  .wp-bottle { height: min(36svh, 380px); }
   .ws-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -1477,6 +1459,7 @@ a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
    poi il testo di sinistra si scambia: tutto a schermo fermo
    ============================================================ */
 .mani-img {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 2px;
@@ -1484,6 +1467,11 @@ a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
 }
 .mani-img img { width: 100%; height: 100%; object-fit: cover; }
 .mani-next { margin-top: 2.6rem; }
+.mani-left { display: contents; }
+.mani-quote-wrap { order: 1; }
+.mani-next { order: 2; }
+.mani-img { order: 3; }
+.vstep { order: 4; margin-top: 3rem; }
 .mani-next .sec-title { font-size: clamp(2.6rem, 5.6vw, 5.4rem); }
 
 .mani-pin.is-seq {
@@ -1494,12 +1482,34 @@ a.wp-link.lk-rise { padding: 0.9rem 0.6em; min-height: 46px; }
   align-items: center;
   padding: calc(var(--nav-h) + 2vh) var(--gutter) 6vh;
 }
-.mani-pin.is-seq .mani-left { position: relative; }
+.mani-pin.is-seq .mani-left { display: block; position: relative; }
 .mani-pin.is-seq .mani-quote-wrap { position: relative; }
-.mani-pin.is-seq .mani-next {
+.mani-pin.is-seq .mani-next,
+.mani-pin.is-seq .vstep {
   position: absolute; inset: 0;
   margin: 0;
+  max-width: none;
   display: flex; flex-direction: column; justify-content: center;
+}
+.mani-pin.is-seq .vstep { max-width: 46ch; }
+
+/* scena impilata sugli schermi stretti: testo sopra, immagine sotto,
+   stessa coreografia dei grandi */
+@media (max-width: 1023px) {
+  .mani-pin.is-seq {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1.4rem;
+    align-items: stretch;
+    padding: calc(var(--nav-h) + 1.5vh) var(--gutter) 3vh;
+  }
+  .mani-pin.is-seq .mani-left { min-height: 40svh; }
+  .mani-pin.is-seq .mani-img { height: min(34svh, 340px); aspect-ratio: auto; margin: 0; }
+  .mani-pin.is-seq .mani-quote p { font-size: clamp(1.25rem, 5.4vw, 1.9rem); }
+  .mani-pin.is-seq .mani-next .sec-title { font-size: clamp(2rem, 9vw, 3.2rem); }
+  .mani-pin.is-seq .vstep h3 { font-size: clamp(1.35rem, 6vw, 1.8rem); }
+  .mani-pin.is-seq .vstep > p:not(.vb-num) { font-size: 0.95rem; }
+  .mani-pin.is-seq .vb-num { width: 38px; height: 38px; margin-bottom: 0.9rem; }
 }
 .mani-pin.is-seq .mani-quote p { font-size: clamp(1.7rem, 3.4vw, 3.1rem); }
 .mani-pin.is-seq .mani-img { margin: 0; }

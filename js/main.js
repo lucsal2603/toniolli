@@ -273,18 +273,32 @@
     const quoteWrap = $("#maniQuoteWrap");
     const next = $("#maniNext");
 
-    // schermo fermo: parole, poi l'immagine entra da destra e si blocca,
-    // poi la citazione lascia il posto al titolo della valle
-    mmMani.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+    // schermo fermo su OGNI formato: parole, immagine che entra da
+    // destra e si ancora al centro, poi il testo di sinistra scorre
+    // la storia (titolo → 4 passi) mentre la foto sfuma a ogni passo
+    mmMani.add("(prefers-reduced-motion: no-preference)", () => {
+      const passi = $$(".vstep", pinEl);
+      const figure = $$(".mani-img .vimg", pinEl);
+      const sezione = pinEl.closest("section");
       pinEl.classList.add("is-seq");
       gsap.set(maniWords, { opacity: 0.13 });
       gsap.set(img, { xPercent: 120, autoAlpha: 0 });
       gsap.set(next, { autoAlpha: 0, y: 36 });
+      gsap.set(passi, { autoAlpha: 0, y: 36 });
+      figure.forEach((f, i) => gsap.set(f, { autoAlpha: i === 0 ? 1 : 0 }));
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: pinEl, start: "top top", end: "+=300%",
+          trigger: pinEl, start: "top top", end: "+=580%",
           pin: true, scrub: 0.5, anticipatePin: 1,
-          invalidateOnRefresh: true, refreshPriority: 3
+          invalidateOnRefresh: true, refreshPriority: 3,
+          onUpdate: (self) => {
+            const zona = self.progress < 0.32 ? "IL MANIFESTO" : "LA VALLE";
+            if (sezione.dataset.zone !== zona) {
+              sezione.dataset.zone = zona;
+              const az = document.getElementById("altiZone");
+              if (az) az.textContent = zona;
+            }
+          }
         }
       });
       tl.to(maniWords, { opacity: 1, stagger: 0.05, ease: "none", duration: 1.1 })
@@ -293,40 +307,29 @@
         .to({}, { duration: 0.12 })
         .to(quoteWrap, { autoAlpha: 0, y: -44, duration: 0.3, ease: "power2.in" })
         .to(next, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, "-=0.08")
-        .to({}, { duration: 0.18 });
+        .to({}, { duration: 0.34 });
+      let precedente = next;
+      passi.forEach((passo, i) => {
+        tl.to(precedente, { autoAlpha: 0, y: -40, duration: 0.3, ease: "power2.in" })
+          .to(passo, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, "-=0.08")
+          .to(figure[i + 1], { autoAlpha: 1, duration: 0.5, ease: "none" }, "<")
+          .to(figure[i], { autoAlpha: 0, duration: 0.5, ease: "none" }, "<")
+          .to({}, { duration: 0.34 });
+        precedente = passo;
+      });
+      tl.to({}, { duration: 0.1 });
       return () => {
         pinEl.classList.remove("is-seq");
-        gsap.set([img, quoteWrap, next], { clearProps: "all" });
+        sezione.dataset.zone = "IL MANIFESTO";
+        gsap.set([img, quoteWrap, next, ...passi, ...figure], { clearProps: "all" });
         gsap.set(maniWords, { clearProps: "opacity" });
       };
-    });
-
-    // sotto i 1024px niente scena: solo le parole che si accendono
-    mmMani.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
-      gsap.set(maniWords, { opacity: 0.13 });
-      gsap.to(maniWords, {
-        opacity: 1, stagger: 0.08, ease: "none",
-        scrollTrigger: { trigger: ".mani-quote", start: "top 75%", end: "bottom 55%", scrub: 0.4 }
-      });
-      return () => gsap.set(maniWords, { clearProps: "opacity" });
     });
   }
 
   /* ============================================================
      LA VALLE — immagini sticky + contour + contatori
      ============================================================ */
-  const vimgs = $$(".vimg");
-  $$(".vblock").forEach((block) => {
-    ScrollTrigger.create({
-      trigger: block,
-      start: "top 60%", end: "bottom 40%",
-      onToggle: (self) => {
-        if (!self.isActive) return;
-        const i = +block.dataset.vimg;
-        vimgs.forEach((img, j) => img.classList.toggle("is-active", i === j));
-      }
-    });
-  });
 
   // ogni crinale ha il suo ritmo: parte in un momento diverso dagli altri
   // e si riempie a una velocità diversa
@@ -467,7 +470,7 @@
      LE ETICHETTE — scroll orizzontale (desktop)
      ============================================================ */
   const mm = gsap.matchMedia();
-  mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
     const track = $("#winesTrack");
     const stage = $("#winesStage");
     const panels = $$(".wine-panel");
