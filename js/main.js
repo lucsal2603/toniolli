@@ -356,8 +356,8 @@
     panels.forEach((panel) => {
       const num = $(".wp-ghost", panel);
       const bottleImg = $(".wp-bottle img", panel);
-      gsap.fromTo(num, { xPercent: -16 }, {
-        xPercent: 16, ease: "none",
+      gsap.fromTo(num, { xPercent: 0 }, {
+        xPercent: 8, ease: "none",
         scrollTrigger: { containerAnimation: horiz, trigger: panel, start: "left right", end: "right left", scrub: true }
       });
       gsap.fromTo(bottleImg, { y: 90, rotation: 3.5 }, {
