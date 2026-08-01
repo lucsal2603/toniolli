@@ -1,0 +1,968 @@
+/* ============================================================
+   CANTINA TONIOLLI — La Valle Verticale (concept)
+   nero porfido · oro vendemmia · carta
+   ============================================================ */
+
+:root {
+  --ink: #14110B;
+  --ink-2: #1B1710;
+  --ink-3: #232014;
+  --paper: #EFE7D6;
+  --paper-dim: rgba(239, 231, 214, 0.66);
+  --paper-faint: rgba(239, 231, 214, 0.38);
+  --line: rgba(239, 231, 214, 0.16);
+  --oro: #D2A64B;
+  --oro-soft: #E4C883;
+  --verde: #A8B77F;
+  --rubino: #C05261;
+  --rosato: #D08A7C;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Archivo", "Helvetica Neue", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --nav-h: 76px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; color-scheme: dark; }
+html.has-js { scroll-behavior: auto; }
+
+section[id], main[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
+
+a, button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-weight: 380;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection { background: var(--oro); color: var(--ink); }
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--oro);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  font-weight: 400;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed; top: 10px; left: 10px; z-index: 400;
+  background: var(--oro); color: var(--ink);
+  padding: 10px 18px; border-radius: 999px;
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em;
+  text-decoration: none;
+  transform: translateY(-300%);
+  transition: transform 0.25s ease;
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* ---------- grain ---------- */
+.grain {
+  position: fixed; inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   PRELOADER
+   ============================================================ */
+.preloader {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--ink);
+  align-items: center; justify-content: center;
+}
+html.has-js .preloader { display: flex; }
+body.is-loaded .preloader { display: none; }
+
+.pre-inner { text-align: center; }
+.pre-quota { color: var(--oro); margin-bottom: 1.2rem; }
+.pre-name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 11vw, 8rem);
+  font-weight: 340;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  overflow: hidden;
+}
+.pre-tag { color: var(--paper-faint); margin-top: 1.2rem; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 210;
+  height: var(--nav-h);
+  display: flex; align-items: center; gap: 1.2rem;
+  padding: 0 max(var(--gutter), env(safe-area-inset-right)) 0 max(var(--gutter), env(safe-area-inset-left));
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, border-color 0.35s ease;
+  border-bottom: 1px solid transparent;
+}
+.nav.is-hidden { transform: translateY(-100%); }
+.nav.is-solid {
+  background: rgba(20, 17, 11, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.nav-brand { display: flex; align-items: center; min-height: 44px; text-decoration: none; }
+.nav-word {
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 420;
+  letter-spacing: 0.16em;
+}
+
+.nav-tag {
+  color: var(--ink);
+  background: var(--oro);
+  font-size: 0.58rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.18em;
+}
+
+.nav-links {
+  margin-left: auto;
+  display: flex; gap: clamp(1rem, 2.2vw, 2.2rem);
+}
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper-dim);
+  padding: 12px 2px;
+  position: relative;
+  transition: color 0.25s ease;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute; left: 2px; right: 100%; bottom: 8px;
+  height: 1px; background: var(--oro);
+  transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-links a:hover { color: var(--paper); }
+.nav-links a:hover::after { right: 2px; }
+
+.nav-burger {
+  margin-left: auto;
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+  width: 48px; height: 48px;
+  background: none; border: 1px solid var(--line); border-radius: 999px;
+  cursor: pointer;
+}
+.nav-burger span {
+  display: block; width: 18px; height: 1.5px;
+  background: var(--paper);
+  transition: transform 0.3s ease;
+}
+
+/* ============================================================
+   MENU OVERLAY
+   ============================================================ */
+.menu {
+  position: fixed; inset: 0; z-index: 320;
+  background: var(--ink-2);
+  clip-path: inset(0 0 100% 0);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: var(--gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.menu[hidden] { display: none; }
+
+.menu-close {
+  position: absolute; top: 18px; right: var(--gutter);
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  background: none; color: var(--paper);
+  border: 1px solid var(--line); border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.menu-close:hover { background: var(--oro); color: var(--ink); border-color: var(--oro); }
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 3rem;
+  align-items: end;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.menu-nav { display: flex; flex-direction: column; }
+.menu-link {
+  display: flex; align-items: baseline; gap: 1.2rem;
+  padding: 0.35rem 0;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+.ml-num { color: var(--paper-faint); font-size: 0.68rem; }
+.ml-txt {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.4vh, 3.4rem);
+  font-weight: 340;
+  line-height: 1.18;
+  transition: color 0.25s ease, font-style 0.25s ease, letter-spacing 0.3s ease;
+}
+.menu-link:hover .ml-txt,
+.menu-link:focus-visible .ml-txt { color: var(--oro); font-style: italic; letter-spacing: 0.02em; }
+
+.menu-aside { color: var(--paper-dim); font-size: 0.95rem; display: grid; gap: 0.7rem; }
+.ma-label { color: var(--oro); }
+.ma-quota { color: var(--paper-faint); }
+
+/* ============================================================
+   ALTIMETRO
+   ============================================================ */
+.altimeter {
+  position: fixed; right: clamp(0.9rem, 2vw, 2rem); top: 50%;
+  transform: translateY(-50%);
+  z-index: 150;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 0.55rem;
+  text-align: right;
+  opacity: 0;
+}
+.alti-readout { font-size: 1rem; color: var(--paper); font-variant-numeric: tabular-nums; }
+.alti-readout .alti-unit { color: var(--paper-faint); font-size: 0.7rem; }
+.alti-zone { color: var(--oro); font-size: 0.58rem; max-width: 110px; }
+.alti-track {
+  position: relative;
+  width: 1px; height: 30vh; min-height: 150px;
+  background: linear-gradient(var(--line), var(--line));
+  margin: 0.3rem 0.55rem 0.3rem 0;
+}
+.alti-track::before {
+  content: "";
+  position: absolute; inset: 0 -4px;
+  background-image: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 12.5%);
+}
+.alti-marker {
+  position: absolute; top: 0; left: 50%;
+  width: 9px; height: 9px;
+  background: var(--oro);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.alti-cap { color: var(--paper-faint); font-size: 0.58rem; }
+
+/* ============================================================
+   SEZIONI — comuni
+   ============================================================ */
+section { position: relative; }
+
+.sec-kicker {
+  color: var(--oro);
+  text-transform: uppercase;
+  margin-bottom: clamp(1.2rem, 3vh, 2.2rem);
+}
+
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7.5vw, 6.8rem);
+  font-weight: 330;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+.sec-title em { font-style: italic; color: var(--oro); font-weight: 300; }
+
+.sec-sub {
+  max-width: 46ch;
+  color: var(--paper-dim);
+  margin-top: 1.6rem;
+  font-size: 1.05rem;
+}
+
+.sec-head { padding: 0 var(--gutter); }
+
+/* split chars */
+.split { display: inline-block; }
+.split .ch { display: inline-block; }
+.split .sp { display: inline-block; width: 0.28em; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 var(--gutter) clamp(1.4rem, 4vh, 3rem);
+  overflow: clip;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(62vw, 980px);
+  height: 100%;
+  overflow: hidden;
+}
+.hero-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+}
+.hero-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, var(--ink) 30%, rgba(20, 17, 11, 0.25) 68%, rgba(20, 17, 11, 0.45)),
+    linear-gradient(to top, var(--ink) 4%, transparent 40%);
+}
+
+.hero-kicker {
+  position: absolute;
+  top: calc(var(--nav-h) + 2vh);
+  left: var(--gutter);
+  color: var(--paper-dim);
+}
+
+.hero-title {
+  position: relative; z-index: 2;
+  font-family: var(--font-display);
+  font-weight: 320;
+  line-height: 0.9;
+  font-size: clamp(2.8rem, min(11.5vw, 17.5vh), 11rem);
+  display: flex; flex-direction: column;
+  margin-bottom: clamp(1.2rem, 3vh, 2.2rem);
+}
+.ht-line { display: block; overflow: hidden; padding: 0.06em 0; }
+.ht-1 { margin-left: 0.03em; }
+.ht-2 { margin-left: clamp(1rem, 8vw, 9rem); }
+.ht-3 { margin-left: clamp(0.5rem, 3.5vw, 4rem); }
+.ht-3 em { font-style: italic; color: var(--oro); font-weight: 300; letter-spacing: 0.01em; }
+.split-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+@supports not (-webkit-text-stroke: 1px black) {
+  .split-outline { color: var(--paper); }
+}
+
+.hero-sub {
+  position: relative; z-index: 2;
+  max-width: 44ch;
+  color: var(--paper-dim);
+  margin-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+.hero-foot {
+  position: relative; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 1.1rem;
+  color: var(--paper-faint);
+}
+.scroll-hint { display: inline-flex; align-items: center; gap: 0.5rem; }
+.scroll-hint svg { animation: hint-bob 1.8s ease-in-out infinite; }
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(3px); }
+}
+
+/* ============================================================
+   MANIFESTO
+   ============================================================ */
+.manifesto { background: var(--ink); }
+.mani-pin {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 18vh var(--gutter);
+  max-width: 1150px;
+}
+.mani-quote p {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 4.3rem);
+  font-weight: 330;
+  line-height: 1.22;
+  letter-spacing: 0.002em;
+}
+.mani-quote .w {
+  display: inline-block;
+  color: var(--paper);
+  opacity: 0.14;
+}
+.mani-sign { margin-top: 2.5rem; color: var(--paper-dim); font-size: 0.95rem; }
+
+/* ============================================================
+   LA VALLE
+   ============================================================ */
+.valle { padding: clamp(6rem, 16vh, 11rem) 0 clamp(4rem, 10vh, 7rem); }
+
+.contour {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.contour path {
+  fill: none;
+  stroke: var(--paper);
+  stroke-opacity: 0.07;
+  stroke-width: 1;
+}
+
+.valle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(3rem, 8vh, 6rem) var(--gutter) 0;
+  align-items: start;
+}
+
+.valle-copy { display: flex; flex-direction: column; gap: 38vh; padding: 14vh 0 24vh; }
+.vblock { max-width: 42ch; }
+.vb-num {
+  color: var(--oro);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  margin-bottom: 1.3rem;
+}
+.vblock h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  font-weight: 360;
+  line-height: 1.1;
+  margin-bottom: 0.9rem;
+}
+.vblock p { color: var(--paper-dim); }
+
+.valle-media {
+  position: sticky;
+  top: calc(50svh - min(34vw, 330px));
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.vimg {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.vimg.is-active { opacity: 1; }
+.vimg img { width: 100%; height: 100%; object-fit: cover; }
+
+.valle-data {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: clamp(4rem, 10vh, 7rem) var(--gutter) 0;
+}
+.vd-item {
+  background: var(--ink);
+  padding: clamp(1.6rem, 4vh, 3rem) clamp(1rem, 2.5vw, 2.4rem);
+}
+.vd-num {
+  font-size: clamp(1.7rem, 3.6vw, 3rem);
+  color: var(--oro);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.vd-cap { color: var(--paper-dim); margin-top: 0.5rem; font-size: 0.92rem; }
+
+/* ============================================================
+   STAGIONI
+   ============================================================ */
+.stagioni {
+  padding: clamp(5rem, 14vh, 9rem) 0;
+  overflow: clip;
+  border-top: 1px solid var(--line);
+}
+.stag-track {
+  display: flex;
+  gap: clamp(1.2rem, 3vw, 2.6rem);
+  padding: 0 var(--gutter);
+  width: max-content;
+}
+.stag-item { flex: 0 0 auto; width: clamp(240px, 30vw, 460px); }
+.si-frame {
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+}
+.si-frame img {
+  width: 100%; height: 112%;
+  object-fit: cover;
+}
+.stag-item:nth-child(even) { transform: translateY(clamp(1.5rem, 5vh, 3.5rem)); }
+.stag-item figcaption { margin-top: 0.9rem; color: var(--paper-faint); }
+
+/* ============================================================
+   I BAITI
+   ============================================================ */
+.baiti {
+  position: relative;
+  min-height: 130svh;
+  overflow: clip;
+  display: flex; align-items: center;
+}
+.baiti-media { position: absolute; inset: -12% 0; }
+.baiti-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.baiti-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, var(--ink) 0%, rgba(20, 17, 11, 0.15) 30%, rgba(20, 17, 11, 0.25) 70%, var(--ink) 100%),
+    radial-gradient(80% 60% at 30% 60%, rgba(20, 17, 11, 0.45), transparent);
+}
+.baiti-title {
+  position: absolute;
+  top: 12%;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 320;
+  font-size: clamp(5rem, 22vw, 21rem);
+  line-height: 1;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(239, 231, 214, 0.85);
+  white-space: nowrap;
+}
+@supports not (-webkit-text-stroke: 1px black) {
+  .baiti-title { color: rgba(239, 231, 214, 0.85); }
+}
+.baiti-card {
+  position: relative; z-index: 2;
+  background: var(--paper);
+  color: var(--ink);
+  max-width: 460px;
+  padding: clamp(1.8rem, 4vw, 3rem);
+  margin: 34vh var(--gutter) 10vh auto;
+  border-radius: 2px;
+}
+.baiti-card .sec-kicker { color: #8a6b22; margin-bottom: 1.2rem; }
+.bc-text { color: rgba(20, 17, 11, 0.78); margin-bottom: 1.1rem; }
+.bc-strong {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   BOTTONI
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 50px;
+  padding: 0.8rem 1.7rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn-gold { background: var(--oro); color: var(--ink); border: 1px solid var(--oro); }
+.btn-gold:hover { background: var(--oro-soft); border-color: var(--oro-soft); }
+.btn-ghost { background: transparent; color: var(--paper); border: 1px solid var(--line); }
+.btn-ghost:hover { border-color: var(--oro); color: var(--oro); }
+.baiti-card .btn-ghost { color: var(--ink); border-color: rgba(20, 17, 11, 0.3); }
+.baiti-card .btn-ghost:hover { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+
+/* ============================================================
+   LE ETICHETTE — orizzontale
+   ============================================================ */
+.wines { background: var(--ink); }
+.wines-head { padding-top: clamp(6rem, 16vh, 11rem); padding-bottom: clamp(3rem, 8vh, 6rem); }
+
+.wines-stage { position: relative; overflow: clip; }
+.wines-track {
+  display: flex;
+  width: max-content;
+}
+
+.wine-panel {
+  position: relative;
+  width: 100vw;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: calc(var(--nav-h) + 2vh) var(--gutter) 12vh;
+  overflow: clip;
+}
+
+.wine-panel { --wcol: var(--oro); }
+.wine-panel[data-wine="muller"] { --wcol: var(--verde); }
+.wine-panel[data-wine="pinot"] { --wcol: var(--rubino); }
+.wine-panel[data-wine="schiava"] { --wcol: var(--rosato); }
+
+.wp-num {
+  position: absolute;
+  top: 50%; left: 4%;
+  transform: translateY(-52%);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(14rem, 38vw, 34rem);
+  line-height: 1;
+  color: var(--wcol);
+  opacity: 0.13;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.wp-bottle {
+  position: relative;
+  justify-self: center;
+  height: min(72svh, 640px);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.wp-bottle img {
+  height: 100%; width: auto;
+  filter: drop-shadow(0 40px 50px rgba(0, 0, 0, 0.55));
+}
+.wp-glow {
+  position: absolute;
+  inset: auto 50% 6% auto;
+  transform: translateX(50%);
+  width: min(46vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--wcol) 26%, transparent) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.wp-info { max-width: 460px; }
+.wp-bait { color: var(--wcol); margin-bottom: 1rem; }
+.wp-name {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+  font-weight: 330;
+  line-height: 0.98;
+  margin-bottom: 0.9rem;
+}
+.wp-name em { font-style: italic; color: var(--wcol); font-weight: 300; }
+.wp-denom { color: var(--paper-faint); margin-bottom: 1.4rem; }
+.wp-desc { color: var(--paper-dim); margin-bottom: 1.6rem; }
+
+.wp-chips {
+  list-style: none;
+  display: flex; flex-wrap: wrap; gap: 0.55rem;
+  margin-bottom: 2rem;
+}
+.wp-chips li {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55rem 0.95rem;
+}
+
+.wp-link {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wcol);
+  text-decoration: none;
+  border-bottom: 1px solid var(--wcol);
+  padding: 0.6rem 0 0.5rem;
+  display: inline-block;
+  transition: letter-spacing 0.3s ease;
+}
+.wp-link:hover { letter-spacing: 0.2em; }
+
+.wines-progress {
+  position: absolute;
+  left: 50%; bottom: 4.5vh;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 1rem;
+  color: var(--paper-dim);
+}
+.wpr-bar {
+  position: relative;
+  width: clamp(120px, 20vw, 260px); height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+.wpr-fill {
+  position: absolute; inset: 0;
+  background: var(--oro);
+  transform-origin: left;
+  transform: scaleX(0.25);
+}
+
+/* ============================================================
+   LA FAMIGLIA
+   ============================================================ */
+.famiglia {
+  padding: clamp(6rem, 16vh, 11rem) var(--gutter);
+  border-top: 1px solid var(--line);
+}
+.fam-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+.fam-media { position: sticky; top: 12vh; }
+.fam-img {
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+}
+.fam-img img { width: 100%; height: 114%; object-fit: cover; }
+.fam-chips { margin-top: 1rem; display: flex; gap: 0.6rem; }
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  color: var(--paper-dim);
+}
+
+.fam-words { margin: 0.5rem 0 2.4rem; }
+.fw {
+  font-family: var(--font-display);
+  font-weight: 330;
+  font-size: clamp(2.6rem, 6.4vw, 5.8rem);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+}
+.fw-outline { color: transparent; -webkit-text-stroke: 1.2px var(--paper); }
+@supports not (-webkit-text-stroke: 1px black) { .fw-outline { color: var(--paper); } }
+.fw-italic em { font-style: italic; color: var(--oro); font-weight: 300; }
+.fam-text { max-width: 52ch; color: var(--paper-dim); margin-bottom: 1.2rem; }
+.fam-text strong { color: var(--paper); font-weight: 550; }
+
+/* ============================================================
+   VISITA
+   ============================================================ */
+.visita {
+  position: relative;
+  min-height: 120svh;
+  overflow: clip;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 16vh var(--gutter);
+}
+.visita-media { position: absolute; inset: -14% 0; }
+.visita-media img { width: 100%; height: 100%; object-fit: cover; }
+.visita-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, var(--ink) 2%, rgba(20, 17, 11, 0.55) 34%, rgba(20, 17, 11, 0.55) 66%, var(--ink) 98%);
+}
+
+.marquee {
+  position: absolute;
+  top: 10%;
+  left: 0; width: 100%;
+  overflow: clip;
+  pointer-events: none;
+}
+.marquee-inner {
+  display: flex;
+  width: max-content;
+}
+.marquee-inner span {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.2rem, 6vw, 5.2rem);
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(239, 231, 214, 0.4);
+  padding-right: 0.5em;
+}
+@supports not (-webkit-text-stroke: 1px black) {
+  .marquee-inner span { color: rgba(239, 231, 214, 0.4); }
+}
+
+.visita-core { position: relative; z-index: 2; text-align: center; }
+.visita-title {
+  font-family: var(--font-display);
+  font-weight: 330;
+  font-size: clamp(3rem, 8.5vw, 7.6rem);
+  line-height: 1.02;
+}
+.visita-title em { font-style: italic; color: var(--oro); font-weight: 300; }
+.visita-sub {
+  color: var(--paper-dim);
+  max-width: 44ch;
+  margin: 1.8rem auto 2.6rem;
+}
+.visita-cta {
+  display: flex; flex-wrap: wrap; gap: 0.8rem;
+  justify-content: center;
+  margin-bottom: 2.6rem;
+}
+.visita-addr { color: var(--paper-faint); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter) 2rem;
+  background: var(--ink);
+  overflow: clip;
+}
+.footer-giant {
+  font-family: var(--font-display);
+  font-weight: 320;
+  font-size: clamp(4rem, 16.5vw, 16rem);
+  line-height: 0.95;
+  text-align: center;
+  letter-spacing: 0.02em;
+  margin-bottom: clamp(3rem, 8vh, 6rem);
+  color: var(--paper);
+}
+.footer-giant .split { overflow: hidden; }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--paper-dim);
+  font-size: 0.98rem;
+}
+.fcol-label { color: var(--oro); margin-bottom: 1rem; }
+.fcol a { text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; padding: 4px 0; display: inline-block; }
+.fcol a:hover { color: var(--paper); border-bottom-color: var(--oro); }
+.fcol-quota { color: var(--paper-faint); margin-top: 1.2rem; }
+
+.footer-legal {
+  display: flex; flex-wrap: wrap; gap: 1rem 2.5rem;
+  justify-content: space-between; align-items: center;
+  padding-top: 1.6rem;
+  color: var(--paper-faint);
+  font-size: 0.8rem;
+}
+.totop {
+  color: var(--paper-dim);
+  text-decoration: none;
+  padding: 12px 0;
+  transition: color 0.2s ease;
+}
+.totop:hover { color: var(--oro); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .altimeter { display: none; }
+  .valle-grid { grid-template-columns: 1fr; }
+  .valle-media { position: relative; top: auto; order: -1; }
+  .valle-copy { gap: 5rem; padding: 3rem 0 1rem; }
+  .fam-grid { grid-template-columns: 1fr; }
+  .fam-media { position: relative; top: auto; max-width: 480px; }
+}
+
+@media (max-width: 767px) {
+  :root { --nav-h: 64px; }
+  body { font-size: 1rem; }
+
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .nav-tag { margin-left: auto; }
+  .nav-burger { margin-left: 0; }
+
+  .menu-grid { grid-template-columns: 1fr; gap: 2.2rem; align-items: start; }
+
+  .hero { padding-bottom: 1.2rem; }
+  .hero-media { width: 100%; inset: 0; }
+  .hero-veil {
+    background:
+      linear-gradient(to top, var(--ink) 8%, rgba(20, 17, 11, 0.35) 55%, rgba(20, 17, 11, 0.55));
+  }
+  .hero-title { font-size: clamp(3rem, 16vw, 5.2rem); }
+  .ht-2 { margin-left: 0.6rem; }
+  .ht-3 { margin-left: 0.3rem; }
+  .br-desk { display: none; }
+  .hero-kicker { max-width: 70vw; }
+
+  .mani-pin { padding: 14vh var(--gutter); }
+
+  .valle-data { grid-template-columns: 1fr; margin-left: var(--gutter); margin-right: var(--gutter); }
+
+  .stag-item { width: min(72vw, 320px); }
+
+  .baiti { min-height: 110svh; }
+  .baiti-title { font-size: clamp(4.4rem, 26vw, 8rem); top: 16%; }
+  .baiti-card { margin: 40vh auto 8vh; }
+
+  .wine-panel {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    min-height: auto;
+    padding: 5.5rem var(--gutter) 4.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .wp-bottle { height: min(52svh, 420px); }
+  .wp-num {
+    font-size: clamp(9rem, 42vw, 14rem);
+    top: 8%; left: auto; right: 2%;
+    transform: none;
+  }
+  .wines-track { display: block; width: auto; }
+  .wines-progress { display: none; }
+  .wines-head { padding-top: 5rem; padding-bottom: 2.5rem; }
+
+  .visita { min-height: 100svh; }
+  .marquee { top: 6%; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-legal { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .scroll-hint svg { animation: none; }
+}
+
+/* debug: nessuna animazione perpetua (verifiche in headless) */
+html.static-mode .scroll-hint svg { animation: none; }

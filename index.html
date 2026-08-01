@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cantina Toniolli — Vini &amp; Spumanti di Montagna · Val di Cembra (Concept)</title>
+  <meta name="description" content="Concept non ufficiale — Cantina Toniolli, vini e spumanti di montagna sui terrazzamenti della Val di Cembra, Trentino.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14110B">
+  <meta property="og:title" content="Cantina Toniolli — Vini & Spumanti di Montagna">
+  <meta property="og:description" content="Viticoltura eroica sui terrazzamenti della Val di Cembra. Concept demo.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314110B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-style='italic' fill='%23D2A64B' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/opt/valle01.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('has-js');</script>
+</head>
+<body>
+  <a class="skip-link" href="#inizio">Salta al contenuto</a>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ PRELOADER ============ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="pre-inner">
+      <p class="pre-quota mono"><span id="preVal">238</span> M S.L.M.</p>
+      <p class="pre-name" id="preName">TONIOLLI</p>
+      <p class="pre-tag mono">VAL DI CEMBRA — TRENTINO</p>
+    </div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <a class="nav-brand" href="#inizio" aria-label="Cantina Toniolli — torna all'inizio">
+      <span class="nav-word" translate="no">TONIOLLI</span>
+    </a>
+    <span class="nav-tag mono" title="Anteprima non ufficiale">CONCEPT</span>
+    <nav class="nav-links" aria-label="Navigazione principale">
+      <a href="#valle">La valle</a>
+      <a href="#baiti">I baiti</a>
+      <a href="#etichette">Le etichette</a>
+      <a href="#famiglia">La famiglia</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+    <button class="nav-burger" id="navBurger" aria-expanded="false" aria-controls="menu" aria-label="Apri il menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ============ MENU OVERLAY ============ -->
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu di navigazione" hidden>
+    <button class="menu-close" id="menuClose" aria-label="Chiudi il menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M2 2l18 18M20 2L2 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="menu-grid">
+      <nav class="menu-nav" aria-label="Menu principale">
+        <a class="menu-link" href="#inizio"><span class="ml-num mono">00</span><span class="ml-txt">Inizio</span></a>
+        <a class="menu-link" href="#valle"><span class="ml-num mono">01</span><span class="ml-txt">La valle</span></a>
+        <a class="menu-link" href="#baiti"><span class="ml-num mono">02</span><span class="ml-txt">I baiti</span></a>
+        <a class="menu-link" href="#etichette"><span class="ml-num mono">03</span><span class="ml-txt">Le etichette</span></a>
+        <a class="menu-link" href="#famiglia"><span class="ml-num mono">04</span><span class="ml-txt">La famiglia</span></a>
+        <a class="menu-link" href="#contatti"><span class="ml-num mono">05</span><span class="ml-txt">Visite &amp; contatti</span></a>
+      </nav>
+      <div class="menu-aside">
+        <p class="mono ma-label">CANTINA TONIOLLI</p>
+        <p>Località Cavade, 1<br>38034 Cembra Lisignago (TN)</p>
+        <p><a href="mailto:info@cantinatoniolli.com">info@cantinatoniolli.com</a></p>
+        <p><a href="https://www.instagram.com/cantina_toniolli/" target="_blank" rel="noopener">Instagram ↗</a></p>
+        <p class="mono ma-quota">575 M S.L.M.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ALTIMETRO ============ -->
+  <div class="altimeter" id="altimeter" aria-hidden="true">
+    <p class="alti-readout mono"><span id="altiVal">238</span><span class="alti-unit"> M</span></p>
+    <p class="alti-zone mono" id="altiZone">VAL DI CEMBRA</p>
+    <div class="alti-track"><span class="alti-marker" id="altiMarker"></span></div>
+    <p class="alti-cap mono">S.L.M.</p>
+  </div>
+
+  <main id="inizio">
+    <!-- ============ HERO ============ -->
+    <section class="hero" data-zone="VAL DI CEMBRA">
+      <figure class="hero-media" id="heroMedia">
+        <img id="heroImg" src="assets/opt/valle01.jpg" alt="Terrazzamenti vitati della Val di Cembra nella luce dorata del tramonto" width="1920" height="1280" fetchpriority="high">
+      </figure>
+      <div class="hero-veil" aria-hidden="true"></div>
+      <p class="hero-kicker mono" id="heroKicker">CANTINA TONIOLLI — CEMBRA LISIGNAGO, TRENTINO</p>
+      <h1 class="hero-title" aria-label="Vini e spumanti di montagna">
+        <span class="ht-line ht-1" aria-hidden="true"><span class="split" data-split>VINI &amp;</span></span>
+        <span class="ht-line ht-2" aria-hidden="true"><span class="split split-outline" data-split>SPUMANTI</span></span>
+        <span class="ht-line ht-3" aria-hidden="true"><em class="split" data-split>di montagna</em></span>
+      </h1>
+      <p class="hero-sub" id="heroSub">Viticoltura eroica sui terrazzamenti della Val di Cembra, <br class="br-desk">Paesaggio Rurale Storico d’Italia.</p>
+      <div class="hero-foot">
+        <p class="mono scroll-hint" id="scrollHint">SCORRI <svg width="11" height="14" viewBox="0 0 11 14" fill="none" aria-hidden="true"><path d="M5.5 1v11M1 8.5L5.5 13 10 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+        <p class="mono hero-coord" id="heroCoord">46°10′ N — 11°13′ E</p>
+      </div>
+    </section>
+
+    <!-- ============ MANIFESTO ============ -->
+    <section class="manifesto" data-zone="IL MANIFESTO">
+      <div class="mani-pin" id="maniPin">
+        <p class="sec-kicker mono" data-reveal>01 — IL MANIFESTO</p>
+        <blockquote class="mani-quote">
+          <p id="maniText" aria-label="Nel calice i profumi della montagna, in ogni sorso l’anima del territorio.">«Nel calice i profumi della montagna, in ogni sorso l’anima del territorio.»</p>
+        </blockquote>
+        <p class="mani-sign" data-reveal>Stefano &amp; Tomaso — vignaioli in Cembra Lisignago</p>
+      </div>
+    </section>
+
+    <!-- ============ LA VALLE ============ -->
+    <section class="valle" id="valle" data-zone="LA VALLE">
+      <svg class="contour" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 120 C 180 90, 320 150, 520 128 S 880 96, 1200 132"/>
+        <path d="M0 240 C 200 210, 360 268, 560 246 S 900 214, 1200 252"/>
+        <path d="M0 360 C 190 332, 340 388, 540 366 S 890 336, 1200 370"/>
+        <path d="M0 480 C 210 452, 350 506, 550 486 S 900 456, 1200 490"/>
+        <path d="M0 600 C 200 574, 340 626, 540 606 S 890 578, 1200 610"/>
+      </svg>
+      <header class="sec-head">
+        <p class="sec-kicker mono" data-reveal>02 — LA VALLE</p>
+        <h2 class="sec-title" data-title>Terrazze<br><em>sul cielo.</em></h2>
+      </header>
+      <div class="valle-grid">
+        <div class="valle-copy">
+          <article class="vblock" data-vimg="0">
+            <p class="vb-num mono">A</p>
+            <h3>Paesaggi unici al mondo</h3>
+            <p>Modellati nei secoli dal duro lavoro dei viticoltori: gradoni strappati ai pendii, vigne cucite sulla roccia, una geometria che cambia con la luce.</p>
+          </article>
+          <article class="vblock" data-vimg="1">
+            <p class="vb-num mono">B</p>
+            <h3>Porfido e pendenza</h3>
+            <p>L’esposizione, le altimetrie e la composizione dei terreni combinano il terroir perfetto per grandi vini e ottimi spumanti.</p>
+          </article>
+          <article class="vblock" data-vimg="2">
+            <p class="vb-num mono">C</p>
+            <h3>Un patrimonio vivo</h3>
+            <p>Dal 2019 la valle è Paesaggio Rurale Storico d’Italia: settecento chilometri di muretti a secco che sorreggono le vigne, sasso dopo sasso.</p>
+          </article>
+        </div>
+        <div class="valle-media">
+          <figure class="vimg is-active"><img src="assets/opt/img9216.jpg" alt="Terrazzamenti verdi della Val di Cembra in estate" width="1920" height="1280" loading="lazy"></figure>
+          <figure class="vimg"><img src="assets/opt/valle02.jpg" alt="Vigneti terrazzati nella luce radente d'autunno" width="1920" height="1280" loading="lazy"></figure>
+          <figure class="vimg"><img src="assets/opt/foto04.jpg" alt="Terrazzamenti innevati d'inverno visti dall'alto" width="1920" height="1010" loading="lazy"></figure>
+        </div>
+      </div>
+      <div class="valle-data">
+        <div class="vd-item" data-reveal>
+          <p class="vd-num mono"><span class="counter" data-count="700">0</span> KM</p>
+          <p class="vd-cap">di muretti a secco</p>
+        </div>
+        <div class="vd-item" data-reveal>
+          <p class="vd-num mono">DAL <span class="counter" data-count="2019">1900</span></p>
+          <p class="vd-cap">Paesaggio Rurale Storico d’Italia</p>
+        </div>
+        <div class="vd-item" data-reveal>
+          <p class="vd-num mono"><span class="counter" data-count="900">0</span> M</p>
+          <p class="vd-cap">di viticoltura eroica, dai 300 in su</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STAGIONI ============ -->
+    <section class="stagioni" data-zone="LE STAGIONI">
+      <div class="stag-track" id="stagTrack">
+        <figure class="stag-item">
+          <div class="si-frame"><img src="assets/opt/img9216.jpg" alt="La valle verde in piena estate" width="1920" height="1280" loading="lazy"></div>
+          <figcaption class="mono">ESTATE — LA VIGNA CRESCE</figcaption>
+        </figure>
+        <figure class="stag-item">
+          <div class="si-frame"><img src="assets/opt/mg0687.jpg" alt="Foglie di vite dorate in controluce" width="1280" height="1920" loading="lazy"></div>
+          <figcaption class="mono">VENDEMMIA — LE MANI IN VIGNA</figcaption>
+        </figure>
+        <figure class="stag-item">
+          <div class="si-frame"><img src="assets/opt/valle01.jpg" alt="Terrazzamenti d'oro al tramonto autunnale" width="1920" height="1280" loading="lazy"></div>
+          <figcaption class="mono">AUTUNNO — LA VALLE SI ACCENDE</figcaption>
+        </figure>
+        <figure class="stag-item">
+          <div class="si-frame"><img src="assets/opt/foto04.jpg" alt="La neve disegna i gradoni dei terrazzamenti" width="1920" height="1010" loading="lazy"></div>
+          <figcaption class="mono">INVERNO — IL RIPOSO</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ I BAITI ============ -->
+    <section class="baiti" id="baiti" data-zone="I BAITI">
+      <figure class="baiti-media">
+        <img id="baitiImg" src="assets/opt/foto01.jpg" alt="Stefano e Tomaso camminano accanto a un bait in pietra tra i filari" width="1200" height="800" loading="lazy">
+      </figure>
+      <div class="baiti-veil" aria-hidden="true"></div>
+      <h2 class="baiti-title" id="baitiTitle" aria-label="I baiti">I BAITI</h2>
+      <div class="baiti-card" data-reveal>
+        <p class="sec-kicker mono">03 — I CUSTODI DELLA VALLE</p>
+        <p class="bc-text">Piccoli edifici rurali e di ristoro che da secoli, circondati dai terrazzamenti sorretti da muretti a secco, caratterizzano la Val di Cembra rendendola unica ad ogni sguardo.</p>
+        <p class="bc-text bc-strong">Ad ogni etichetta dedichiamo il bait del suo vitigno.</p>
+        <a class="btn btn-ghost" href="#etichette">Scopri le etichette</a>
+      </div>
+    </section>
+
+    <!-- ============ LE ETICHETTE ============ -->
+    <section class="wines" id="etichette" data-zone="LE ETICHETTE">
+      <header class="sec-head wines-head">
+        <p class="sec-kicker mono" data-reveal>04 — LE ETICHETTE</p>
+        <h2 class="sec-title" data-title>Quattro vini,<br><em>quattro baiti.</em></h2>
+        <p class="sec-sub" data-reveal>Un omaggio ai nostri avi per il contributo che hanno dato alla bellezza paesaggistica della Valle di Cembra.</p>
+      </header>
+      <div class="wines-stage" id="winesStage">
+        <div class="wines-track" id="winesTrack">
+
+          <article class="wine-panel" data-wine="trentodoc">
+            <p class="wp-num" aria-hidden="true">N.1</p>
+            <figure class="wp-bottle">
+              <span class="wp-glow" aria-hidden="true"></span>
+              <img src="assets/opt/bott-trentodoc.png" alt="Bottiglia Bait numero 1, Trento DOC metodo classico" width="606" height="1500" loading="lazy">
+            </figure>
+            <div class="wp-info">
+              <p class="wp-bait mono">IL BAIT N.1</p>
+              <h3 class="wp-name">Trento <em>DOC</em></h3>
+              <p class="wp-denom mono">METODO CLASSICO — BOLLICINE DI MONTAGNA</p>
+              <p class="wp-desc">Rifermentazione in bottiglia e lunghi mesi sui lieviti, tra le rocce di porfido: la montagna che diventa bollicina.</p>
+              <ul class="wp-chips" aria-label="Note di degustazione">
+                <li>Crosta di pane</li><li>Mela golden</li><li>Nocciola</li>
+              </ul>
+              <a class="wp-link" href="#contatti">Richiedi in degustazione</a>
+            </div>
+          </article>
+
+          <article class="wine-panel" data-wine="muller">
+            <p class="wp-num" aria-hidden="true">N.2</p>
+            <figure class="wp-bottle">
+              <span class="wp-glow" aria-hidden="true"></span>
+              <img src="assets/opt/bott-muller.png" alt="Bottiglia Bait numero 2, Müller Thurgau Trentino DOC" width="606" height="1500" loading="lazy">
+            </figure>
+            <div class="wp-info">
+              <p class="wp-bait mono">IL BAIT N.2</p>
+              <h3 class="wp-name">Müller <em>Thurgau</em></h3>
+              <p class="wp-denom mono">TRENTINO DOC — IL BIANCO DELLA VALLE</p>
+              <p class="wp-desc">Aromatico e verticale, cresce dove la vite guarda le Dolomiti: il vitigno simbolo della Val di Cembra.</p>
+              <ul class="wp-chips" aria-label="Note di degustazione">
+                <li>Fiori bianchi</li><li>Salvia</li><li>Pietra focaia</li>
+              </ul>
+              <a class="wp-link" href="#contatti">Richiedi in degustazione</a>
+            </div>
+          </article>
+
+          <article class="wine-panel" data-wine="pinot">
+            <p class="wp-num" aria-hidden="true">N.3</p>
+            <figure class="wp-bottle">
+              <span class="wp-glow" aria-hidden="true"></span>
+              <img src="assets/opt/bott-pinotnero.png" alt="Bottiglia Bait numero 3, Pinot Nero" width="606" height="1500" loading="lazy">
+            </figure>
+            <div class="wp-info">
+              <p class="wp-bait mono">IL BAIT N.3</p>
+              <h3 class="wp-name">Pinot <em>Nero</em></h3>
+              <p class="wp-denom mono">VAL DI CEMBRA — ROSSO DI MONTAGNA</p>
+              <p class="wp-desc">Il rosso più elegante e più difficile, domato terrazza dopo terrazza nelle vigne alte della valle.</p>
+              <ul class="wp-chips" aria-label="Note di degustazione">
+                <li>Ciliegia</li><li>Sottobosco</li><li>Spezie dolci</li>
+              </ul>
+              <a class="wp-link" href="#contatti">Richiedi in degustazione</a>
+            </div>
+          </article>
+
+          <article class="wine-panel" data-wine="schiava">
+            <p class="wp-num" aria-hidden="true">N.4</p>
+            <figure class="wp-bottle">
+              <span class="wp-glow" aria-hidden="true"></span>
+              <img src="assets/opt/bott-schiava.png" alt="Bottiglia Bait numero 4, Schiava" width="606" height="1500" loading="lazy">
+            </figure>
+            <div class="wp-info">
+              <p class="wp-bait mono">IL BAIT N.4</p>
+              <h3 class="wp-name">Schiava</h3>
+              <p class="wp-denom mono">VAL DI CEMBRA — LA TRADIZIONE</p>
+              <p class="wp-desc">Il vitigno di casa: leggero e profumato, da sempre sulle tavole trentine. Beva gioiosa, radici profonde.</p>
+              <ul class="wp-chips" aria-label="Note di degustazione">
+                <li>Ciliegia</li><li>Viola</li><li>Mandorla amara</li>
+              </ul>
+              <a class="wp-link" href="#contatti">Richiedi in degustazione</a>
+            </div>
+          </article>
+
+        </div>
+        <div class="wines-progress" aria-hidden="true">
+          <span class="wpr-idx mono" id="wineIdx">01</span>
+          <span class="wpr-bar"><span class="wpr-fill" id="wineFill"></span></span>
+          <span class="wpr-tot mono">04</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LA FAMIGLIA ============ -->
+    <section class="famiglia" id="famiglia" data-zone="LA FAMIGLIA">
+      <div class="fam-grid">
+        <div class="fam-media">
+          <figure class="fam-img" id="famImg">
+            <img src="assets/opt/foto06.jpg" alt="Stefano e Tomaso Toniolli sotto la pergola dei vigneti" width="1280" height="1920" loading="lazy">
+          </figure>
+          <p class="fam-chips"><span class="chip mono">STEFANO</span><span class="chip mono">TOMASO</span></p>
+        </div>
+        <div class="fam-copy">
+          <p class="sec-kicker mono" data-reveal>05 — LA FAMIGLIA</p>
+          <div class="fam-words" aria-hidden="true">
+            <p class="fw" data-fw>GENUINITÀ</p>
+            <p class="fw fw-outline" data-fw>PASSIONE</p>
+            <p class="fw fw-italic" data-fw><em>tradizione</em></p>
+          </div>
+          <p class="sr-only">Genuinità, passione, tradizione.</p>
+          <p class="fam-text" data-reveal>Siamo <strong>Stefano e Tomaso</strong> e la nostra è un’azienda familiare nel cuore della Valle di Cembra, tra vegetazione e terrazzamenti ricavati su ripidi pendii soleggiati.</p>
+          <p class="fam-text" data-reveal>Da sempre condividiamo la stessa passione per la viticoltura: tecniche tradizionali e innovative, per portare nel calice vini di alta qualità.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VISITA / CONTATTI ============ -->
+    <section class="visita" id="contatti" data-zone="LA CANTINA">
+      <figure class="visita-media">
+        <img id="visitaImg" src="assets/opt/copertina.jpg" alt="La Val di Cembra al tramonto, colline terrazzate a perdita d'occhio" width="1920" height="1280" loading="lazy">
+      </figure>
+      <div class="visita-veil" aria-hidden="true"></div>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-inner" id="marqueeInner">
+          <span>DEGUSTAZIONI IN CANTINA&ensp;·&ensp;VISITE TRA I TERRAZZAMENTI&ensp;·&ensp;VAL DI CEMBRA&ensp;·&ensp;</span><span>DEGUSTAZIONI IN CANTINA&ensp;·&ensp;VISITE TRA I TERRAZZAMENTI&ensp;·&ensp;VAL DI CEMBRA&ensp;·&ensp;</span>
+        </div>
+      </div>
+      <div class="visita-core">
+        <h2 class="visita-title" data-title><em>Vieni ad assaggiare</em><br>la valle.</h2>
+        <p class="visita-sub" data-reveal>Degustazioni su prenotazione in Località Cavade, tra i terrazzamenti di Cembra Lisignago.</p>
+        <div class="visita-cta" data-reveal>
+          <a class="btn btn-gold" id="magneticBtn" href="mailto:info@cantinatoniolli.com?subject=Richiesta%20degustazione">Prenota una degustazione</a>
+          <a class="btn btn-ghost" href="tel:+393486950258">Tomaso — 348 695 0258</a>
+          <a class="btn btn-ghost" href="tel:+393337850060">Stefano — 333 785 0060</a>
+        </div>
+        <p class="mono visita-addr" data-reveal>LOC. CAVADE 1 — 38034 CEMBRA LISIGNAGO (TN) — 575 M S.L.M.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" data-zone="LA CIMA">
+    <p class="footer-giant" id="footerGiant" aria-hidden="true" translate="no"><span class="split" data-split>TONIOLLI</span></p>
+    <div class="footer-grid">
+      <div class="fcol">
+        <p class="mono fcol-label">INDIRIZZO</p>
+        <p>Toniolli RTS Soc. Agricola S.<br>Località Cavade, 1<br>38034 Cembra Lisignago (TN)</p>
+      </div>
+      <div class="fcol">
+        <p class="mono fcol-label">CONTATTI</p>
+        <p><a href="tel:+393486950258">Tomaso — 348 695 0258</a><br>
+           <a href="tel:+393337850060">Stefano — 333 785 0060</a><br>
+           <a href="mailto:info@cantinatoniolli.com">info@cantinatoniolli.com</a></p>
+      </div>
+      <div class="fcol">
+        <p class="mono fcol-label">SEGUICI</p>
+        <p><a href="https://www.instagram.com/cantina_toniolli/" target="_blank" rel="noopener">Instagram — @cantina_toniolli ↗</a></p>
+        <p class="mono fcol-quota">SEI ARRIVATO IN CIMA — 905 M</p>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p>© 2026 Toniolli RTS Soc. Agricola S. — Concept demo non ufficiale, realizzato a scopo dimostrativo. Fotografie © Cantina Toniolli.</p>
+      <p>Design &amp; sviluppo — Luca Salvemini</p>
+      <a class="totop mono" href="#inizio">TORNA A VALLE ↑</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
