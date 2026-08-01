@@ -302,21 +302,46 @@
   });
 
   /* ============================================================
-     STAGIONI — drift orizzontale
+     STAGIONI — nastro che gira da solo, non legato allo scroll
      ============================================================ */
-  if (!reduceMotion) {
+  {
     const track = $("#stagTrack");
-    const drift = () => -(track.scrollWidth - window.innerWidth + 60);
-    gsap.fromTo(track, { x: 40 }, {
-      x: drift, ease: "none",
-      scrollTrigger: { trigger: ".stagioni", start: "top bottom", end: "bottom top", scrub: 1, invalidateOnRefresh: true }
-    });
-    $$(".si-frame img").forEach((img) => {
-      gsap.fromTo(img, { yPercent: -8 }, {
-        yPercent: 0, ease: "none",
-        scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: 1 }
-      });
-    });
+    if (track) {
+      const originali = [...track.children];
+      if (!reduceMotion && !staticMode) {
+        // copia della sequenza: serve per chiudere il giro senza stacchi
+        originali.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.setAttribute("aria-hidden", "true");
+          track.appendChild(clone);
+        });
+
+        const giro = gsap.to(track, {
+          xPercent: -50,
+          duration: 46,
+          repeat: -1,
+          ease: "none"
+        });
+
+        // dorme fuori schermo; rallenta (senza fermarsi) su una scheda,
+        // così si riesce a leggere ma non sembra mai bloccato
+        whenVisible(track, () => giro.play(), () => giro.pause());
+        $$(".stag-item", track).forEach((card) => {
+          card.addEventListener("pointerenter", () => gsap.to(giro, { timeScale: 0.22, duration: 0.5 }));
+          card.addEventListener("pointerleave", () => gsap.to(giro, { timeScale: 1, duration: 0.7 }));
+        });
+      }
+
+      // leggera parallasse verticale dentro ogni riquadro
+      if (!reduceMotion) {
+        $$(".si-frame img", track).forEach((img) => {
+          gsap.fromTo(img, { yPercent: -8 }, {
+            yPercent: 0, ease: "none",
+            scrollTrigger: { trigger: track, start: "top bottom", end: "bottom top", scrub: 1 }
+          });
+        });
+      }
+    }
   }
 
   /* ============================================================
@@ -621,25 +646,9 @@
     });
   }
 
-  /* ---------- nastro secondario, verso opposto ---------- */
-  if (!reduceMotion && !staticMode) {
-    const ribbon = $("#ribbonInner");
-    if (ribbon) {
-      gsap.set(ribbon, { xPercent: -50 });
-      const rtl = gsap.to(ribbon, { xPercent: 0, duration: 34, repeat: -1, ease: "none" });
-      ScrollTrigger.create({
-        trigger: ".ribbon", start: "top bottom", end: "bottom top",
-        onUpdate: (self) => {
-          const v = Math.min(Math.abs(self.getVelocity()) / 1100, 2.6);
-          gsap.to(rtl, { timeScale: 1 + v, duration: 0.4, overwrite: true });
-        }
-      });
-    }
-  }
-
   /* ---------- reveal a cascata sui gruppi ---------- */
   if (!reduceMotion) {
-    [".valle-data", ".metodo-list", ".bg-grid", ".tl", ".info-grid"].forEach((sel) => {
+    [".valle-data", ".metodo-list", ".bg-grid", ".info-grid"].forEach((sel) => {
       const box = $(sel);
       if (!box) return;
       const kids = [...box.children];
@@ -649,6 +658,26 @@
         scrollTrigger: { trigger: box, start: "top 85%", once: true }
       });
     });
+  }
+
+
+  /* ---------- la storia: una tappa alla volta, mentre scorri ---------- */
+  {
+    const tappe = $$(".tl-item");
+    if (tappe.length && !reduceMotion) {
+      tappe.forEach((item) => {
+        const line = $(".tl-line", item);
+        const when = $(".tl-when", item);
+        const body = $(".tl-body", item);
+        gsap.set(line, { scaleX: 0 });
+        gsap.set(when, { autoAlpha: 0, x: -26 });
+        gsap.set(body, { autoAlpha: 0, y: 34 });
+        gsap.timeline({ scrollTrigger: { trigger: item, start: "top 84%", once: true } })
+          .to(line, { scaleX: 1, duration: 0.9, ease: "power3.out" })
+          .to(when, { autoAlpha: 1, x: 0, duration: 0.7, ease: "expo.out" }, "-=0.62")
+          .to(body, { autoAlpha: 1, y: 0, duration: 0.85, ease: "expo.out" }, "-=0.55");
+      });
+    }
   }
 
   /* ============================================================
