@@ -278,16 +278,23 @@
     });
   });
 
+  // il valore finale sta nell'HTML (leggibile senza JS e dai crawler);
+  // l'animazione parte da data-from e ci torna sopra
   $$(".counter").forEach((c) => {
-    const end = +c.dataset.count;
-    const start = +c.textContent;
+    const end = +c.textContent.replace(/\D/g, "");
+    const start = +(c.dataset.from ?? 0);
+    if (!Number.isFinite(end) || reduceMotion) return;
     const obj = { v: start };
     ScrollTrigger.create({
-      trigger: c, start: "top 88%", once: true,
-      onEnter: () => gsap.to(obj, {
-        v: end, duration: reduceMotion ? 0 : 1.8, ease: "power2.out",
-        onUpdate: () => { c.textContent = Math.round(obj.v); }
-      })
+      trigger: c, start: "top 92%", once: true,
+      onEnter: () => {
+        c.textContent = start;
+        gsap.to(obj, {
+          v: end, duration: 1.8, ease: "power2.out",
+          onUpdate: () => { c.textContent = Math.round(obj.v); },
+          onComplete: () => { c.textContent = end; }
+        });
+      }
     });
   });
 
