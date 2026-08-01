@@ -16,9 +16,9 @@
   --verde: #A8B77F;
   --rubino: #C05261;
   --rosato: #D08A7C;
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Archivo", "Helvetica Neue", sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  --font-display: "Erode", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Cabinet Grotesk", "Helvetica Neue", sans-serif;
+  --font-mono: "Space Mono", "SFMono-Regular", monospace;
   --gutter: clamp(1.25rem, 4vw, 4rem);
   --nav-h: 76px;
 }
@@ -36,9 +36,10 @@ body {
   background: var(--ink);
   color: var(--paper);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  font-weight: 380;
+  font-size: 1.075rem;
+  line-height: 1.62;
+  font-weight: 400;
+  letter-spacing: 0.004em;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
@@ -57,8 +58,8 @@ a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; 
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-size: 0.685rem;
+  letter-spacing: 0.11em;
   font-weight: 400;
 }
 
@@ -104,8 +105,8 @@ body.is-loaded .preloader { display: none; }
 .pre-name {
   font-family: var(--font-display);
   font-size: clamp(3rem, 11vw, 8rem);
-  font-weight: 340;
-  letter-spacing: 0.08em;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   line-height: 1;
   overflow: hidden;
 }
@@ -133,9 +134,9 @@ body.is-loaded .preloader { display: none; }
 .nav-brand { display: flex; align-items: center; min-height: 44px; text-decoration: none; }
 .nav-word {
   font-family: var(--font-display);
-  font-size: 1.22rem;
-  font-weight: 420;
-  letter-spacing: 0.16em;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
 }
 
 .nav-tag {
@@ -231,7 +232,7 @@ body.is-loaded .preloader { display: none; }
 .ml-txt {
   font-family: var(--font-display);
   font-size: clamp(2rem, 5.4vh, 3.4rem);
-  font-weight: 340;
+  font-weight: 400;
   line-height: 1.18;
   transition: color 0.25s ease, font-style 0.25s ease, letter-spacing 0.3s ease;
 }
@@ -289,11 +290,11 @@ section { position: relative; }
 .sec-title {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 7.5vw, 6.8rem);
-  font-weight: 330;
-  line-height: 0.98;
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.022em;
 }
-.sec-title em { font-style: italic; color: var(--oro); font-weight: 300; }
+.sec-title em { font-style: italic; color: var(--oro); font-weight: 400; }
 
 .sec-sub {
   max-width: 46ch;
@@ -349,7 +350,7 @@ section { position: relative; }
 .hero-title {
   position: relative; z-index: 2;
   font-family: var(--font-display);
-  font-weight: 320;
+  font-weight: 400;
   line-height: 0.9;
   font-size: clamp(2.8rem, min(11.5vw, 17.5vh), 11rem);
   display: flex; flex-direction: column;
@@ -359,10 +360,10 @@ section { position: relative; }
 .ht-1 { margin-left: 0.03em; }
 .ht-2 { margin-left: clamp(1rem, 8vw, 9rem); }
 .ht-3 { margin-left: clamp(0.5rem, 3.5vw, 4rem); }
-.ht-3 em { font-style: italic; color: var(--oro); font-weight: 300; letter-spacing: 0.01em; }
+.ht-3 em { font-style: italic; color: var(--oro); font-weight: 400; letter-spacing: 0.005em; }
 .split-outline {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--paper);
+  -webkit-text-stroke: 1.7px var(--paper);
 }
 @supports not (-webkit-text-stroke: 1px black) {
   .split-outline { color: var(--paper); }
@@ -402,9 +403,9 @@ section { position: relative; }
 .mani-quote p {
   font-family: var(--font-display);
   font-size: clamp(1.9rem, 5vw, 4.3rem);
-  font-weight: 330;
-  line-height: 1.22;
-  letter-spacing: 0.002em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
 }
 .mani-quote .w {
   display: inline-block;
@@ -438,7 +439,8 @@ section { position: relative; }
   align-items: start;
 }
 
-.valle-copy { display: flex; flex-direction: column; gap: 38vh; padding: 14vh 0 24vh; }
+/* la coda in fondo garantisce corsa allo sticky fino all'ultimo blocco */
+.valle-copy { display: flex; flex-direction: column; gap: 38vh; padding: 14vh 0 max(24vh, 29vw); }
 .vblock { max-width: 42ch; }
 .vb-num {
   color: var(--oro);
@@ -451,15 +453,18 @@ section { position: relative; }
 .vblock h3 {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 2.6vw, 2.3rem);
-  font-weight: 360;
+  font-weight: 500;
   line-height: 1.1;
   margin-bottom: 0.9rem;
 }
 .vblock p { color: var(--paper-dim); }
 
 .valle-media {
+  /* si aggancia a metà viewport e risale di mezza altezza:
+     centratura esatta senza consumare la corsa dello sticky */
   position: sticky;
-  top: calc(50svh - min(34vw, 330px));
+  top: 50svh;
+  translate: 0 -50%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 2px;
@@ -547,7 +552,7 @@ section { position: relative; }
   z-index: 1;
   width: 100%;
   font-family: var(--font-display);
-  font-weight: 320;
+  font-weight: 400;
   font-size: clamp(5rem, 22vw, 21rem);
   line-height: 1;
   text-align: center;
@@ -572,7 +577,7 @@ section { position: relative; }
 .bc-strong {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   color: var(--ink);
   line-height: 1.3;
 }
@@ -638,12 +643,12 @@ section { position: relative; }
   max-width: 44%;
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   font-size: var(--ghost-size, 9rem);
   line-height: 0.82;
   letter-spacing: -0.015em;
   color: var(--wcol);
-  opacity: 0.14;
+  opacity: 0.12;
   pointer-events: none;
   hyphens: none;
 }
@@ -679,11 +684,12 @@ section { position: relative; }
 .wp-name {
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 5.2vw, 4.6rem);
-  font-weight: 330;
-  line-height: 0.98;
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
   margin-bottom: 0.9rem;
 }
-.wp-name em { font-style: italic; color: var(--wcol); font-weight: 300; }
+.wp-name em { font-style: italic; color: var(--wcol); font-weight: 400; }
 .wp-denom { color: var(--paper-faint); margin-bottom: 1.4rem; }
 .wp-desc { color: var(--paper-dim); margin-bottom: 1.6rem; }
 
@@ -773,16 +779,16 @@ section { position: relative; }
 .fam-words { margin: 0.5rem 0 2.4rem; }
 .fw {
   font-family: var(--font-display);
-  font-weight: 330;
+  font-weight: 400;
   font-size: clamp(2.6rem, 6.4vw, 5.8rem);
   line-height: 1.02;
   letter-spacing: 0.01em;
 }
-.fw-outline { color: transparent; -webkit-text-stroke: 1.2px var(--paper); }
+.fw-outline { color: transparent; -webkit-text-stroke: 1.4px var(--paper); }
 @supports not (-webkit-text-stroke: 1px black) { .fw-outline { color: var(--paper); } }
-.fw-italic em { font-style: italic; color: var(--oro); font-weight: 300; }
+.fw-italic em { font-style: italic; color: var(--oro); font-weight: 400; }
 .fam-text { max-width: 52ch; color: var(--paper-dim); margin-bottom: 1.2rem; }
-.fam-text strong { color: var(--paper); font-weight: 550; }
+.fam-text strong { color: var(--paper); font-weight: 700; }
 
 /* ============================================================
    VISITA
@@ -816,7 +822,7 @@ section { position: relative; }
 .marquee-inner span {
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2.2rem, 6vw, 5.2rem);
   white-space: nowrap;
   color: transparent;
@@ -830,11 +836,11 @@ section { position: relative; }
 .visita-core { position: relative; z-index: 2; text-align: center; }
 .visita-title {
   font-family: var(--font-display);
-  font-weight: 330;
+  font-weight: 400;
   font-size: clamp(3rem, 8.5vw, 7.6rem);
   line-height: 1.02;
 }
-.visita-title em { font-style: italic; color: var(--oro); font-weight: 300; }
+.visita-title em { font-style: italic; color: var(--oro); font-weight: 400; }
 .visita-sub {
   color: var(--paper-dim);
   max-width: 44ch;
@@ -858,7 +864,7 @@ section { position: relative; }
 }
 .footer-giant {
   font-family: var(--font-display);
-  font-weight: 320;
+  font-weight: 400;
   font-size: clamp(4rem, 16.5vw, 16rem);
   line-height: 0.95;
   text-align: center;
@@ -903,7 +909,7 @@ section { position: relative; }
 @media (max-width: 1024px) {
   .altimeter { display: none; }
   .valle-grid { grid-template-columns: 1fr; }
-  .valle-media { position: relative; top: auto; order: -1; }
+  .valle-media { position: relative; top: auto; translate: none; order: -1; }
   .valle-copy { gap: 5rem; padding: 3rem 0 1rem; }
   .fam-grid { grid-template-columns: 1fr; }
   .fam-media { position: relative; top: auto; max-width: 480px; }
