@@ -91,6 +91,7 @@
         <img id="heroImg" src="assets/opt/valle01.jpg" alt="Terrazzamenti vitati della Val di Cembra nella luce dorata del tramonto" width="1920" height="1280" fetchpriority="high">
       </figure>
       <div class="hero-veil" aria-hidden="true"></div>
+      <canvas class="dust" id="dustHero" aria-hidden="true"></canvas>
       <p class="hero-kicker mono" id="heroKicker">CANTINA TONIOLLI — CEMBRA LISIGNAGO, TRENTINO</p>
       <h1 class="hero-title" aria-label="Vini e spumanti di montagna">
         <span class="ht-line ht-1" aria-hidden="true"><span class="split" data-split>VINI &amp;</span></span>
@@ -125,6 +126,7 @@
         <path d="M0 600 C 200 574, 340 626, 540 606 S 890 578, 1200 610"/>
       </svg>
       <header class="sec-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>LA VALLE</p>
         <h2 class="sec-title" data-title>Terrazze<br><em>sul cielo.</em></h2>
       </header>
@@ -181,6 +183,7 @@
     <!-- ============ STAGIONI ============ -->
     <section class="stagioni" id="stagioni" data-zone="LE STAGIONI">
       <header class="sec-head stag-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>L'ANNO IN VIGNA</p>
         <h2 class="sec-title" data-title>Le quattro stagioni<br><em>della vigna.</em></h2>
         <p class="sec-sub" data-reveal>In montagna il calendario non lo decide chi coltiva: lo detta la quota. Qui tutto arriva più tardi che a fondovalle, e tutto va fatto in fretta quando arriva.</p>
@@ -226,6 +229,7 @@
         <path d="M0 570 C 230 536, 390 604, 600 576 S 970 540, 1200 582"/>
       </svg>
       <header class="sec-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>DALLA VIGNA AL CALICE</p>
         <h2 class="sec-title" data-title>Il metodo<br><em>è togliere.</em></h2>
         <p class="sec-sub" data-reveal>Nessun gesto spettacolare in cantina. La qualità si decide fuori, sulle terrazze, e il lavoro dentro serve soprattutto a non rovinarla.</p>
@@ -276,7 +280,14 @@
 
     <!-- ============ I QUATTRO BAITI ============ -->
     <section class="baitgrid" data-zone="I QUATTRO BAITI">
+      <svg class="contour contour-baiti" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 110 C 200 78, 360 146, 580 118 S 950 80, 1200 122"/>
+        <path d="M0 280 C 230 244, 390 316, 610 286 S 970 248, 1200 292"/>
+        <path d="M0 450 C 200 416, 370 486, 580 456 S 950 420, 1200 462"/>
+        <path d="M0 620 C 240 586, 400 654, 620 626 S 980 590, 1200 632"/>
+      </svg>
       <header class="sec-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>UNO PER VIGNA</p>
         <h2 class="sec-title" data-title>Quattro baiti,<br><em>quattro vigne.</em></h2>
         <p class="sec-sub" data-reveal>Le nostre parcelle sono sparse su terrazze diverse, ciascuna con la sua altitudine e la sua esposizione. A ognuna corrisponde un bait, e a ogni bait una bottiglia.</p>
@@ -322,6 +333,7 @@
     <!-- ============ LE ETICHETTE ============ -->
     <section class="wines" id="etichette" data-zone="LE ETICHETTE">
       <header class="sec-head wines-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>LE ETICHETTE</p>
         <h2 class="sec-title" data-title>Quattro vini,<br><em>quattro baiti.</em></h2>
         <p class="sec-sub" data-reveal>Un omaggio ai nostri avi per il contributo che hanno dato alla bellezza paesaggistica della Valle di Cembra.</p>
@@ -330,6 +342,7 @@
         <div class="wines-track" id="winesTrack">
 
           <article class="wine-panel" data-wine="trentodoc">
+            <canvas class="bolle" id="bolle" aria-hidden="true"></canvas>
             <p class="wp-ghost" aria-hidden="true">TRENTODOC</p>
             <figure class="wp-bottle">
               <span class="wp-glow" aria-hidden="true"></span>
@@ -463,6 +476,7 @@
 
     <!-- ============ LA FAMIGLIA ============ -->
     <section class="famiglia" id="famiglia" data-zone="LA FAMIGLIA">
+      <canvas class="dust" id="dustFam" aria-hidden="true"></canvas>
       <div class="fam-grid">
         <div class="fam-media">
           <figure class="fam-img" id="famImg">
@@ -486,9 +500,23 @@
       </div>
     </section>
 
+    <!-- ============ NASTRO ============ -->
+    <div class="ribbon" aria-hidden="true">
+      <div class="ribbon-inner" id="ribbonInner">
+        <span>PORFIDO&ensp;·&ensp;MURETTI A SECCO&ensp;·&ensp;VENDEMMIA A MANO&ensp;·&ensp;NOTTI FREDDE&ensp;·&ensp;VITICOLTURA EROICA&ensp;·&ensp;</span><span>PORFIDO&ensp;·&ensp;MURETTI A SECCO&ensp;·&ensp;VENDEMMIA A MANO&ensp;·&ensp;NOTTI FREDDE&ensp;·&ensp;VITICOLTURA EROICA&ensp;·&ensp;</span>
+      </div>
+    </div>
+
     <!-- ============ TIMELINE ============ -->
     <section class="storia" data-zone="LA STORIA">
+      <svg class="contour contour-storia" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 110 C 200 78, 360 146, 580 118 S 950 80, 1200 122"/>
+        <path d="M0 280 C 230 244, 390 316, 610 286 S 970 248, 1200 292"/>
+        <path d="M0 450 C 200 416, 370 486, 580 456 S 950 420, 1200 462"/>
+        <path d="M0 620 C 240 586, 400 654, 620 626 S 980 590, 1200 632"/>
+      </svg>
       <header class="sec-head">
+        <span class="glow" aria-hidden="true"></span>
         <p class="sec-kicker mono" data-reveal>COME SI È FATTA QUESTA VALLE</p>
         <h2 class="sec-title" data-title>Una storia<br><em>scritta in pietra.</em></h2>
       </header>

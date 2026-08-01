@@ -269,12 +269,15 @@
     });
   });
 
-  $$(".contour path").forEach((p, i) => {
-    const len = p.getTotalLength();
-    gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-    gsap.to(p, {
-      strokeDashoffset: 0, ease: "none",
-      scrollTrigger: { trigger: ".valle", start: "top 80%", end: "60% 40%", scrub: 1 }
+  $$(".contour").forEach((svg) => {
+    const host = svg.closest("section") || svg.parentElement;
+    $$("path", svg).forEach((path, i) => {
+      const len = path.getTotalLength();
+      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+      gsap.to(path, {
+        strokeDashoffset: 0, ease: "none",
+        scrollTrigger: { trigger: host, start: "top 85%", end: "65% 40%", scrub: 1 + i * 0.15 }
+      });
     });
   });
 
@@ -334,7 +337,7 @@
      LE ETICHETTE — scroll orizzontale (desktop)
      ============================================================ */
   const mm = gsap.matchMedia();
-  mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+  mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
     const track = $("#winesTrack");
     const stage = $("#winesStage");
     const panels = $$(".wine-panel");
@@ -447,6 +450,205 @@
         onEnter: () => gsap.to(chars, { yPercent: 0, autoAlpha: 1, duration: 1.1, stagger: 0.05, ease: "expo.out" })
       });
     }
+  }
+
+
+  /* ============================================================
+     SFONDI ANIMATI — pulviscolo, bollicine, glow, nastri
+     Un solo ticker condiviso; i canvas dormono quando escono di vista.
+     ============================================================ */
+  const canvasLoops = [];
+
+  function setupCanvas(cv) {
+    const ctx = cv.getContext("2d", { alpha: true });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const fit = () => {
+      const r = cv.getBoundingClientRect();
+      cv.width = Math.max(1, Math.round(r.width * dpr));
+      cv.height = Math.max(1, Math.round(r.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w: r.width, h: r.height };
+    };
+    return { ctx, fit };
+  }
+
+  // sospende il disegno quando l'elemento non è a schermo
+  function whenVisible(el, onIn, onOut) {
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? onIn() : onOut()), { rootMargin: "120px" });
+    io.observe(el);
+    return io;
+  }
+
+  /* ---------- pulviscolo dorato ---------- */
+  function dust(cv, opts = {}) {
+    if (!cv || reduceMotion || staticMode) return;
+    const { ctx, fit } = setupCanvas(cv);
+    let size = fit();
+    const density = opts.density || 0.000055;
+    const cap = opts.cap || 90;
+    let bits = [];
+    const seed = (n) => {
+      bits = Array.from({ length: n }, (_, i) => ({
+        x: ((i * 97) % 100) / 100 * size.w,
+        y: ((i * 61) % 100) / 100 * size.h,
+        r: 0.7 + ((i * 37) % 100) / 100 * 2.1,
+        vy: -(0.06 + ((i * 53) % 100) / 100 * 0.22),
+        vx: (((i * 29) % 100) / 100 - 0.5) * 0.12,
+        a: 0.16 + ((i * 71) % 100) / 100 * 0.6,
+        ph: ((i * 43) % 100) / 100 * Math.PI * 2
+      }));
+    };
+    const build = () => {
+      size = fit();
+      seed(Math.min(cap, Math.round(size.w * size.h * density)));
+    };
+    build();
+
+    let t = 0, alive = false;
+    const draw = () => {
+      t += 0.016;
+      ctx.clearRect(0, 0, size.w, size.h);
+      for (const b of bits) {
+        b.y += b.vy; b.x += b.vx + Math.sin(t * 0.6 + b.ph) * 0.09;
+        if (b.y < -6) { b.y = size.h + 6; b.x = Math.random() * size.w; }
+        if (b.x < -6) b.x = size.w + 6;
+        if (b.x > size.w + 6) b.x = -6;
+        const tw = 0.55 + Math.sin(t * 1.4 + b.ph) * 0.45;
+        const al = (b.a * tw);
+        const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 2.6);
+        g.addColorStop(0, `rgba(232, 205, 148, ${al.toFixed(3)})`);
+        g.addColorStop(1, "rgba(232, 205, 148, 0)");
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r * 2.6, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+    };
+    const loop = { draw, active: () => alive };
+    canvasLoops.push(loop);
+    whenVisible(cv, () => { alive = true; }, () => { alive = false; });
+    ScrollTrigger.addEventListener("refreshInit", build);
+    gsap.to(cv, { opacity: 1, duration: 1.6, ease: "power2.out",
+      scrollTrigger: { trigger: cv.parentElement, start: "top 80%", once: true } });
+  }
+
+  /* ---------- bollicine ---------- */
+  function bubbles(cv) {
+    if (!cv || reduceMotion || staticMode) return;
+    const { ctx, fit } = setupCanvas(cv);
+    let size = fit();
+    let bs = [];
+    const build = () => {
+      size = fit();
+      const n = Math.min(72, Math.round(size.h / 13));
+      bs = Array.from({ length: n }, (_, i) => ({
+        x: ((i * 83) % 100) / 100 * size.w,
+        y: size.h + ((i * 47) % 100) / 100 * size.h,
+        r: 1.4 + ((i * 31) % 100) / 100 * 4.2,
+        v: 0.22 + ((i * 59) % 100) / 100 * 0.5,
+        ph: ((i * 67) % 100) / 100 * Math.PI * 2
+      }));
+    };
+    build();
+    let t = 0, alive = false;
+    const draw = () => {
+      t += 0.016;
+      ctx.clearRect(0, 0, size.w, size.h);
+      for (const b of bs) {
+        b.y -= b.v;
+        const x = b.x + Math.sin(t * 0.9 + b.ph) * 7;
+        if (b.y < -8) { b.y = size.h + 8; b.x = Math.random() * size.w; }
+        const fade = Math.min(1, b.y / size.h + 0.15);
+        ctx.beginPath();
+        ctx.arc(x, b.y, b.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(232, 205, 148, ${(0.5 * fade).toFixed(3)})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+    };
+    canvasLoops.push({ draw, active: () => alive });
+    whenVisible(cv, () => { alive = true; }, () => { alive = false; });
+    ScrollTrigger.addEventListener("refreshInit", build);
+    gsap.to(cv, { opacity: 1, duration: 1.4, ease: "power2.out", delay: 0.3 });
+  }
+
+  dust($("#dustHero"), { cap: 130, density: 0.00008 });
+  dust($("#dustFam"), { cap: 80, density: 0.00006 });
+  bubbles($("#bolle"));
+
+  if (canvasLoops.length) {
+    gsap.ticker.add(() => { for (const l of canvasLoops) if (l.active()) l.draw(); });
+  }
+
+  /* ---------- glow che respirano ---------- */
+  if (!reduceMotion && !staticMode) {
+    $$(".glow").forEach((g, i) => {
+      gsap.to(g, {
+        scale: 1.16, opacity: 0.72, xPercent: 4,
+        duration: 6.5 + i * 0.8, yoyo: true, repeat: -1, ease: "sine.inOut"
+      });
+    });
+  }
+
+  /* ---------- Ken Burns, attivo solo a schermo ---------- */
+  $$(".vimg img").forEach((img) => {
+    img.classList.add("kenburns");
+    if (reduceMotion) return;
+    img.style.animationPlayState = "paused";
+    whenVisible(img, () => { img.style.animationPlayState = "running"; },
+                     () => { img.style.animationPlayState = "paused"; });
+  });
+
+  /* ---------- parallax multilivello sulle nuove foto ---------- */
+  if (!reduceMotion) {
+    [[".baitmap img", 14], [".bg-frame img", 7]].forEach(([sel, amt]) => {
+      $$(sel).forEach((img) => {
+        gsap.fromTo(img, { yPercent: -amt / 2 }, {
+          yPercent: amt / 2, ease: "none",
+          scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+      });
+    });
+  }
+
+  /* ---------- linee dei passi del metodo ---------- */
+  if (!reduceMotion) {
+    $$(".ms-line").forEach((l) => {
+      gsap.to(l, {
+        scaleX: 1, duration: 1.1, ease: "power3.out",
+        scrollTrigger: { trigger: l.closest(".mstep"), start: "top 85%", once: true }
+      });
+    });
+  }
+
+  /* ---------- nastro secondario, verso opposto ---------- */
+  if (!reduceMotion && !staticMode) {
+    const ribbon = $("#ribbonInner");
+    if (ribbon) {
+      gsap.set(ribbon, { xPercent: -50 });
+      const rtl = gsap.to(ribbon, { xPercent: 0, duration: 34, repeat: -1, ease: "none" });
+      ScrollTrigger.create({
+        trigger: ".ribbon", start: "top bottom", end: "bottom top",
+        onUpdate: (self) => {
+          const v = Math.min(Math.abs(self.getVelocity()) / 1100, 2.6);
+          gsap.to(rtl, { timeScale: 1 + v, duration: 0.4, overwrite: true });
+        }
+      });
+    }
+  }
+
+  /* ---------- reveal a cascata sui gruppi ---------- */
+  if (!reduceMotion) {
+    [".valle-data", ".metodo-list", ".bg-grid", ".tl", ".info-grid"].forEach((sel) => {
+      const box = $(sel);
+      if (!box) return;
+      const kids = [...box.children];
+      kids.forEach((k) => k.removeAttribute("data-reveal"));
+      gsap.fromTo(kids, { y: 46, autoAlpha: 0 }, {
+        y: 0, autoAlpha: 1, duration: 0.95, ease: "expo.out", stagger: 0.09,
+        scrollTrigger: { trigger: box, start: "top 85%", once: true }
+      });
+    });
   }
 
   /* ============================================================
