@@ -28,5 +28,7 @@ Buona parte dei testi di dettaglio e tutti i dati tecnici dei vini sono **materi
 
 ## Crediti
 
+Le sottolineature animate dei link sono un port in CSS puro di **skiper40** di [Skiper UI](https://skiper-ui.com) (@gurvinder-singh02), rilasciato per uso libero con attribuzione. Il componente originale è React e Tailwind: qui è stato riscritto perché il sito non usa framework.
+
 Fotografie e testi originali © Cantina Toniolli, usati per la sola dimostrazione.
 Design e sviluppo — Luca Salvemini.
