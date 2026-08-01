@@ -1093,7 +1093,15 @@ html.static-mode .scroll-hint svg { animation: none; }
   overflow: hidden;
   border-radius: 2px;
 }
-.baitmap img { width: 100%; height: clamp(240px, 46vh, 520px); object-fit: cover; }
+.baitmap img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1920 / 1306;
+  max-height: min(78vh, 800px);
+  object-fit: cover;
+  /* le quattro parcelle stanno nella fascia bassa della foto aerea */
+  object-position: 50% 62%;
+}
 .baitmap figcaption { color: var(--paper-faint); margin-top: 0.9rem; }
 
 .bg-grid {
@@ -1278,7 +1286,7 @@ html.static-mode .scroll-hint svg { animation: none; }
   .valle-data { grid-template-columns: 1fr; }
   .metodo-list { grid-template-columns: 1fr; margin-left: var(--gutter); margin-right: var(--gutter); }
   .bg-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .baitmap img { height: clamp(200px, 34vh, 300px); }
+  .baitmap img { max-height: 52vh; }
   .ws-list { grid-template-columns: 1fr; }
   .tl-item { grid-template-columns: 1fr; gap: 0.7rem; }
   .tl-when { padding-top: 0; }

@@ -8,7 +8,6 @@ Questo è un **concept dimostrativo**. I testi e le fotografie di partenza vengo
 |---|---|---|
 | Altimetro (tutto il sito) | da 238 a 905 m s.l.m. | Scelti come fondovalle e vigne alte plausibili per la Val di Cembra. La cantina non dichiara quote da nessuna parte. |
 | Preloader e menu | 575 m s.l.m. | Quota indicativa della cantina. |
-| Hero | 46°10′ N — 11°13′ E | Coordinate approssimate di Cembra Lisignago, non della cantina. |
 | La valle | 700 km di muretti a secco | Cifra circolante sulla valle, non verificata su fonte ufficiale. |
 | La valle | vigne fino a 900 m, da 300 in su | Stima sull'intera valle, non sulle parcelle Toniolli. |
 | La valle | pendenze oltre il 50% | Stima. |

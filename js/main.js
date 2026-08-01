@@ -787,7 +787,8 @@
 
   /* ---------- parallax multilivello sulle nuove foto ---------- */
   if (!reduceMotion) {
-    [[".baitmap img", 14], [".bg-frame img", 7]].forEach(([sel, amt]) => {
+    // niente parallasse sulla mappa: mostrata intera, scoprirebbe i bordi
+    [[".bg-frame img", 7]].forEach(([sel, amt]) => {
       $$(sel).forEach((img) => {
         gsap.fromTo(img, { yPercent: -amt / 2 }, {
           yPercent: amt / 2, ease: "none",
